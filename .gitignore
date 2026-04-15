@@ -44,3 +44,6 @@ next-env.d.ts
 
 # local planning docs
 PLAN.md
+
+*storybook.log
+storybook-static
