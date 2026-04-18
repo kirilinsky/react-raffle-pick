@@ -21,7 +21,7 @@ export const useNumberCycle = (min: number, max: number, interval: number) => {
       setCurrentValue(rNum)
     }, intervalRef.current)
     return () => clearInterval(intervalId)
-  }, [startFlag])
+  }, [startFlag, min, max])
 
   return { currentValue, start, stop, started: startFlag }
 }
