@@ -68,8 +68,5 @@
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.8",
     "vitest": "^4.1.4"
-  },
-  "dependencies": {
-    "react-calendar-datetime": "^6.0.0-beta.2"
   }
 }
