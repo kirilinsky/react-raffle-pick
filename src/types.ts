@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 
-export type AnimationType = 'roll' | 'fade' | 'blur' | 'flip' | 'reel'
+export type AnimationType = 'roll' | 'fade' | 'blur' | 'reel'
 export type RafflePickValue = number | string
 
 export interface RafflePickProps {

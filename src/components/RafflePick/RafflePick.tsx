@@ -1,32 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useNumberCycle } from '../../hooks/useNumberCycle'
-import { useSelection } from '../../hooks/useSelection'
-import type { RafflePickProps } from '../../types'
-
-const START_INERTIA_MS = 460
-const STOP_INERTIA_MS = 1080
-const START_INERTIA_INTERVAL_MULTIPLIERS = [2.4, 1.55, 1]
-const STOP_INERTIA_INTERVAL_MULTIPLIERS = [1.15, 1.65, 2.35, 3.25]
-const START_INERTIA_STEPS = [
-  { delay: 140, step: 1 },
-  { delay: 300, step: 2 },
-]
-const STOP_INERTIA_STEPS = [
-  { delay: 180, step: 1 },
-  { delay: 460, step: 2 },
-  { delay: 760, step: 3 },
-]
-
-type RafflePickPhase = 'idle' | 'starting' | 'running' | 'settling' | 'frozen'
-
-const joinClassNames = (...classNames: Array<string | undefined>) =>
-  classNames.filter(Boolean).join(' ')
+import { useRafflePhase } from '../../hooks/useRafflePhase'
+import { joinClassNames } from '../../utils/class-names'
+import { getInertiaMultiplier, type RafflePickPhase } from '../../utils/inertia'
+import type { RafflePickProps, RafflePickValue } from '../../types'
 
 export function RafflePick({
   items,
   min = 1,
   max = 100,
-  interval = 80,
+  interval = 110,
   random = true,
   inertia = false,
   animationType = 'roll',
@@ -44,153 +27,120 @@ export function RafflePick({
   const hasItems = itemCount > 0
   const cycleMin = hasItems ? 0 : min
   const cycleMax = hasItems ? itemCount - 1 : max
-  const initialPhase = autoStart ? (inertia ? 'starting' : 'running') : 'idle'
-  const [phase, setPhase] = useState<RafflePickPhase>(initialPhase)
-  const [inertiaStep, setInertiaStep] = useState(0)
-  const inertiaIntervalMultiplier =
-    inertia && phase === 'starting'
-      ? (START_INERTIA_INTERVAL_MULTIPLIERS[inertiaStep] ?? 1)
-      : inertia && phase === 'settling'
-        ? (STOP_INERTIA_INTERVAL_MULTIPLIERS[inertiaStep] ??
-          STOP_INERTIA_INTERVAL_MULTIPLIERS[STOP_INERTIA_INTERVAL_MULTIPLIERS.length - 1])
-        : 1
-  const cycleInterval = Math.max(16, Math.round(interval * inertiaIntervalMultiplier))
-  const {
-    start: cycleStart,
-    stop: cycleStop,
-    currentValue,
-  } = useNumberCycle(cycleMin, cycleMax, cycleInterval, random, autoStart)
-  const { state, start, freeze, reset } = useSelection(onSelect, autoStart ? 'running' : 'idle')
-  const selectedValue = hasItems ? items![currentValue] : currentValue
-  const selectedValueRef = useRef(selectedValue)
-  const inertiaTimersRef = useRef<Array<ReturnType<typeof setTimeout>>>([])
 
-  const clearInertiaTimers = useCallback(() => {
-    inertiaTimersRef.current.forEach(clearTimeout)
-    inertiaTimersRef.current = []
+  const initialPhase: RafflePickPhase = autoStart
+    ? inertia
+      ? 'starting'
+      : 'running'
+    : 'idle'
+
+  const itemsRef = useRef(items)
+  itemsRef.current = items
+
+  const displayValue = useCallback((v: number): RafflePickValue => {
+    const its = itemsRef.current
+    return its && its.length > 0 ? its[v] : v
   }, [])
 
-  const queueInertiaTimer = useCallback((callback: () => void, delay: number) => {
-    const timerId = setTimeout(callback, delay)
-    inertiaTimersRef.current.push(timerId)
-  }, [])
+  const spanRef = useRef<HTMLSpanElement>(null)
+  const [displayed, setDisplayed] = useState<RafflePickValue>(() =>
+    displayValue(cycleMin)
+  )
 
-  const setRunningPhase = useCallback(() => {
-    if (!inertia) {
-      setPhase('running')
+  const writeSpan = useCallback(
+    (value: number) => {
+      const node = spanRef.current
+      if (!node) return
+      const txt = String(displayValue(value))
+      node.textContent = txt
+      node.setAttribute('data-value', txt)
+      const anims = node.getAnimations({ subtree: true })
+      for (let i = 0; i < anims.length; i++) anims[i].currentTime = 0
+    },
+    [displayValue]
+  )
+
+  const valueRef = useRef<number>(cycleMin)
+
+  const onSettle = useCallback(() => {
+    const v = displayValue(valueRef.current)
+    setDisplayed(v)
+    onSelect?.(v)
+  }, [displayValue, onSelect])
+
+  const { phase, step, start, freeze, reset } = useRafflePhase(
+    inertia,
+    initialPhase,
+    onSettle
+  )
+
+  const multiplier = getInertiaMultiplier(phase, step, inertia)
+  const cycleInterval = Math.max(16, Math.round(interval * multiplier))
+  const running = phase === 'starting' || phase === 'running' || phase === 'settling'
+
+  useNumberCycle({
+    min: cycleMin,
+    max: cycleMax,
+    interval: cycleInterval,
+    random,
+    running,
+    valueRef,
+    onTick: writeSpan,
+  })
+
+  useLayoutEffect(() => {
+    if (running) writeSpan(valueRef.current)
+  })
+
+  const handleClick = useCallback(() => {
+    if (phase === 'settling') return
+    if (running) {
+      freeze()
       return
     }
-
-    setInertiaStep(0)
-    setPhase('starting')
-  }, [inertia])
-
-  const startRaffle = useCallback(() => {
-    clearInertiaTimers()
     reset()
     start()
-    cycleStart()
-    setRunningPhase()
-  }, [clearInertiaTimers, cycleStart, reset, setRunningPhase, start])
+  }, [phase, running, freeze, reset, start])
 
-  const freezeRaffle = useCallback(() => {
-    if (!inertia) {
-      cycleStop()
-      freeze(selectedValueRef.current)
-      setPhase('frozen')
-      return
-    }
+  const selectionState = phase === 'idle' ? 'idle' : phase === 'frozen' ? 'frozen' : 'running'
+  const label = selectionState === 'frozen' ? 'Pick Again' : buttonLabel
+  const valueKey =
+    selectionState === 'frozen' ? `${animationType}-${String(displayed)}` : animationType
 
-    clearInertiaTimers()
-    setInertiaStep(0)
-    setPhase('settling')
-  }, [clearInertiaTimers, cycleStop, freeze, inertia])
-
-  useEffect(() => {
-    selectedValueRef.current = selectedValue
-  }, [selectedValue])
-
-  useEffect(() => {
-    if (phase !== 'starting') {
-      return
-    }
-
-    clearInertiaTimers()
-    START_INERTIA_STEPS.forEach(({ delay, step }) => {
-      queueInertiaTimer(() => setInertiaStep(step), delay)
-    })
-
-    queueInertiaTimer(() => {
-      setInertiaStep(0)
-      setPhase('running')
-      clearInertiaTimers()
-    }, START_INERTIA_MS)
-
-    return clearInertiaTimers
-  }, [clearInertiaTimers, phase, queueInertiaTimer])
-
-  useEffect(() => {
-    if (phase !== 'settling') {
-      return
-    }
-
-    clearInertiaTimers()
-    STOP_INERTIA_STEPS.forEach(({ delay, step }) => {
-      queueInertiaTimer(() => setInertiaStep(step), delay)
-    })
-
-    queueInertiaTimer(() => {
-      cycleStop()
-      freeze(selectedValueRef.current)
-      setInertiaStep(0)
-      setPhase('frozen')
-      clearInertiaTimers()
-    }, STOP_INERTIA_MS)
-
-    return clearInertiaTimers
-  }, [clearInertiaTimers, cycleStop, freeze, phase, queueInertiaTimer])
-
-  useEffect(() => clearInertiaTimers, [clearInertiaTimers])
-
-  const handleClick = () => {
-    if (phase === 'settling') {
-      return
-    }
-
-    if (state === 'running') {
-      freezeRaffle()
-      return
-    }
-
-    startRaffle()
-  }
-
-  const label = state === 'frozen' ? 'Pick Again' : buttonLabel
-  const valueKey = state === 'frozen' ? `${animationType}-${String(selectedValue)}` : animationType
+  const rootClass = useMemo(() => joinClassNames('rrp', className), [className])
+  const valueClass = useMemo(
+    () => joinClassNames('rrp-value', valueClassName),
+    [valueClassName]
+  )
+  const buttonClass = useMemo(
+    () => joinClassNames('rrp-button', buttonClassName),
+    [buttonClassName]
+  )
 
   return (
     <div
-      className={joinClassNames('rrp', className)}
-      data-state={state}
+      className={rootClass}
+      data-state={selectionState}
       data-phase={phase}
-      data-inertia-step={inertiaStep}
+      data-inertia-step={step}
       data-animation={animationType}
       data-inertia={inertia ? '' : undefined}
       style={style}
     >
       <span
+        ref={spanRef}
         key={valueKey}
-        className={joinClassNames('rrp-value', valueClassName)}
+        className={valueClass}
         data-animation={animationType}
-        data-value={selectedValue}
+        data-value={displayed}
         data-phase={phase}
-        data-inertia-step={inertiaStep}
-        style={valueStyle}
+        data-inertia-step={step}
+        style={{ ...valueStyle, ['--rrp-tick' as string]: `${cycleInterval}ms` }}
       >
-        {selectedValue}
+        {displayed}
       </span>
       <button
-        className={joinClassNames('rrp-button', buttonClassName)}
+        className={buttonClass}
         disabled={phase === 'settling'}
         style={buttonStyle}
         onClick={handleClick}

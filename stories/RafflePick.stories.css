@@ -33,37 +33,22 @@
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   line-height: 1;
-  transform: translate3d(0, 0, 0);
-  will-change: filter, opacity, transform;
 }
 
-.raffle-demo__value--flip {
-  min-width: 3.4ch;
-  min-height: 1.24em;
-  border-radius: 6px;
-  background: linear-gradient(#27272a 0 48%, #18181b 48% 52%, #09090b 52% 100%);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.16),
-    inset 0 -1px 0 rgb(0 0 0 / 0.45);
-  color: #fafafa;
-  overflow: hidden;
-  padding: 0.12em 0.18em;
-  transform-origin: 50% 50%;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
+.raffle-panel[data-state='running'] .raffle-demo__value,
+.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value,
+.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value {
+  will-change: filter, opacity, transform;
+  transform: translateZ(0);
 }
 
 .raffle-demo__value--reel {
   position: relative;
   min-width: 3.8ch;
   min-height: 1.28em;
-  border: 1px solid #27272a;
-  border-radius: 7px;
-  background:
-    linear-gradient(rgb(255 255 255 / 0.12), transparent 28% 72%, rgb(0 0 0 / 0.2)), #111827;
-  box-shadow:
-    inset 0 8px 12px rgb(255 255 255 / 0.08),
-    inset 0 -10px 16px rgb(0 0 0 / 0.42);
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  background: #fafafa;
   color: transparent;
   overflow: hidden;
   padding: 0.1em 0.22em;
@@ -80,22 +65,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  color: #f8fafc;
-  text-shadow:
-    0 -1.25em 0 rgb(248 250 252 / 0.35),
-    0 1.25em 0 rgb(248 250 252 / 0.35);
-  transform: translate3d(0, 0, 0);
-  will-change: filter, transform;
-}
-
-.raffle-demo__value--reel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-top: 1px solid rgb(255 255 255 / 0.14);
-  border-bottom: 1px solid rgb(0 0 0 / 0.36);
-  background: linear-gradient(transparent 0 42%, rgb(0 0 0 / 0.38) 48% 52%, transparent 58% 100%);
-  pointer-events: none;
+  color: #18181b;
 }
 
 .raffle-demo__button {
@@ -114,7 +84,7 @@
 }
 
 .raffle-demo__button:disabled {
-  cursor: wait;
+  cursor: default;
   opacity: 0.72;
 }
 
@@ -127,10 +97,6 @@
   padding: 20px;
 }
 
-.raffle-panel--flip {
-  perspective: 700px;
-}
-
 .raffle-panel--reel {
   perspective: 500px;
 }
@@ -140,99 +106,26 @@
 }
 
 .raffle-panel[data-state='running'] .raffle-demo__value[data-animation='roll'] {
-  animation: raffle-roll-running 520ms linear infinite;
+  animation: raffle-roll-running var(--rrp-tick, 360ms) cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 .raffle-panel[data-state='running'] .raffle-demo__value[data-animation='fade'] {
-  animation: raffle-fade-running 520ms ease-in-out infinite;
+  animation: raffle-fade-running var(--rrp-tick, 320ms) cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .raffle-panel[data-state='running'] .raffle-demo__value[data-animation='blur'] {
-  animation: raffle-blur-running 520ms ease-in-out infinite;
-}
-
-.raffle-panel[data-state='running'] .raffle-demo__value[data-animation='flip'] {
-  animation: raffle-flip-running 640ms ease-in-out infinite;
+  animation: raffle-blur-running var(--rrp-tick, 360ms) cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .raffle-panel[data-state='running'] .raffle-demo__value[data-animation='reel']::before {
-  animation: raffle-reel-running 420ms steps(4, end) infinite;
-}
-
-.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value[data-animation='roll'],
-.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value[data-animation='fade'],
-.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value[data-animation='blur'],
-.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value[data-animation='flip'] {
-  animation-duration: 760ms;
-  animation-timing-function: cubic-bezier(0.34, 0, 0.42, 1);
-}
-
-.raffle-panel[data-inertia][data-phase='starting']
-  .raffle-demo__value[data-animation='reel']::before {
-  animation-duration: 720ms;
-  animation-timing-function: steps(3, end);
-}
-
-.raffle-panel[data-inertia][data-phase='starting'][data-inertia-step='1']
-  .raffle-demo__value[data-animation='reel']::before {
-  animation-duration: 560ms;
-}
-
-.raffle-panel[data-inertia][data-phase='starting'][data-inertia-step='2']
-  .raffle-demo__value[data-animation='reel']::before {
-  animation-duration: 420ms;
-}
-
-.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value[data-animation='roll'],
-.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value[data-animation='fade'],
-.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value[data-animation='blur'],
-.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value[data-animation='flip'] {
-  animation-duration: 960ms;
-  animation-timing-function: cubic-bezier(0.18, 0.78, 0.22, 1);
-}
-
-.raffle-panel[data-inertia][data-phase='settling']
-  .raffle-demo__value[data-animation='reel']::before {
-  animation-duration: 520ms;
-  animation-timing-function: steps(3, end);
-}
-
-.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='1']
-  .raffle-demo__value[data-animation='reel']::before {
-  animation-duration: 700ms;
-}
-
-.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='2']
-  .raffle-demo__value[data-animation='reel']::before {
-  animation-duration: 900ms;
-}
-
-.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='3']
-  .raffle-demo__value[data-animation='reel']::before {
-  animation-duration: 1120ms;
-}
-
-.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value--reel,
-.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value--reel {
-  animation: raffle-reel-click 180ms steps(2, end) infinite;
-}
-
-.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='2']
-  .raffle-demo__value--reel {
-  animation-duration: 240ms;
-}
-
-.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='3']
-  .raffle-demo__value--reel {
-  animation-duration: 320ms;
+  animation: raffle-reel-running var(--rrp-tick, 420ms) linear infinite;
 }
 
 .raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='roll'],
 .raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='fade'],
 .raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='blur'],
-.raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='flip'],
 .raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='reel']::before {
-  animation: raffle-settle 180ms var(--raffle-animation-easing);
+  animation: raffle-settle 420ms cubic-bezier(0.2, 1.4, 0.4, 1);
 }
 
 @keyframes raffle-roll-running {
@@ -242,72 +135,58 @@
   }
 
   50% {
-    transform: translate3d(0, -0.08em, 0);
+    transform: translate3d(0, -0.18em, 0);
   }
 }
 
 @keyframes raffle-fade-running {
   0%,
   100% {
-    opacity: 1;
+    opacity: 0.18;
+    transform: scale(0.92);
   }
 
   50% {
-    opacity: 0.82;
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
 @keyframes raffle-blur-running {
   0%,
   100% {
+    filter: blur(2.5px);
+  }
+
+  50% {
     filter: blur(0);
-  }
-
-  50% {
-    filter: blur(1.25px);
-  }
-}
-
-@keyframes raffle-flip-running {
-  0%,
-  100% {
-    transform: rotateX(0);
-  }
-
-  50% {
-    transform: rotateX(-10deg);
   }
 }
 
 @keyframes raffle-settle {
-  from {
-    transform: scale(0.98);
+  0% {
+    transform: scale(0.86);
+    filter: blur(2px);
   }
 
-  to {
+  60% {
+    transform: scale(1.06);
+    filter: blur(0);
+  }
+
+  100% {
     transform: scale(1);
+    filter: blur(0);
   }
 }
 
 @keyframes raffle-reel-running {
   0% {
-    filter: blur(1.4px);
-    transform: translate3d(0, -1.25em, 0) rotateX(8deg);
-  }
-
-  40% {
-    filter: blur(0.6px);
-    transform: translate3d(0, -0.22em, 0) rotateX(2deg);
-  }
-
-  68% {
-    filter: blur(0.25px);
-    transform: translate3d(0, 0.08em, 0) rotateX(0);
+    transform: translate3d(0, -1em, 0);
   }
 
   100% {
-    filter: blur(1.4px);
-    transform: translate3d(0, 1.25em, 0) rotateX(-8deg);
+    transform: translate3d(0, 1em, 0);
   }
 }
 

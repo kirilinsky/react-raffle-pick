@@ -1,34 +1,45 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 import { getRandom } from '../utils/get-random'
 
-export const useNumberCycle = (
-  min: number,
-  max: number,
-  interval: number,
-  random = true,
-  initialStarted = false
-) => {
-  const [currentValue, setCurrentValue] = useState(min)
-  const [startFlag, setStartFlag] = useState<boolean>(initialStarted)
+interface UseNumberCycleArgs {
+  min: number
+  max: number
+  interval: number
+  random: boolean
+  running: boolean
+  valueRef: RefObject<number>
+  onTick?: (value: number) => void
+}
 
-  const start = useCallback(() => {
-    setStartFlag(true)
-  }, [])
-
-  const stop = useCallback(() => {
-    setStartFlag(false)
-  }, [])
+export const useNumberCycle = ({
+  min,
+  max,
+  interval,
+  random,
+  running,
+  valueRef,
+  onTick,
+}: UseNumberCycleArgs) => {
+  const onTickRef = useRef(onTick)
 
   useEffect(() => {
-    if (!startFlag) return
-    const intervalId = setInterval(() => {
-      setCurrentValue((value) => {
-        if (random) return getRandom(min, max)
-        return value >= max ? min : value + 1
-      })
-    }, interval)
-    return () => clearInterval(intervalId)
-  }, [startFlag, min, max, interval, random])
+    onTickRef.current = onTick
+  })
 
-  return { currentValue, start, stop, started: startFlag }
+  useEffect(() => {
+    if (!running) return
+    const id = setInterval(() => {
+      const cur = valueRef.current
+      const next = random
+        ? getRandom(min, max)
+        : cur >= max
+          ? min
+          : cur + 1
+      valueRef.current = next
+      onTickRef.current?.(next)
+    }, interval)
+    return () => clearInterval(id)
+  }, [running, interval, min, max, random])
+
+  return valueRef
 }

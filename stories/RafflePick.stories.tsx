@@ -25,7 +25,7 @@ const meta = {
     inertia: { control: 'boolean' },
     animationType: {
       control: { type: 'select' },
-      options: ['roll', 'fade', 'blur', 'flip', 'reel'],
+      options: ['roll', 'fade', 'blur', 'reel'],
     },
     buttonLabel: { control: 'text' },
     className: { control: 'text' },
@@ -125,17 +125,6 @@ export const BlurAnimation: Story = {
     valueClassName: 'raffle-demo__value',
     buttonClassName: 'raffle-demo__button',
     buttonLabel: 'Go',
-  },
-}
-
-export const FlipAnimation: Story = {
-  args: {
-    animationType: 'flip',
-    interval: 90,
-    className: 'raffle-demo raffle-panel raffle-panel--flip',
-    valueClassName: 'raffle-demo__value raffle-demo__value--flip',
-    buttonClassName: 'raffle-demo__button',
-    buttonLabel: 'Flip',
   },
 }
 
