@@ -1,9 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getRandom } from '../utils/get-random'
 
-export const useNumberCycle = (min: number, max: number, interval: number) => {
+export const useNumberCycle = (
+  min: number,
+  max: number,
+  interval: number,
+  random = true,
+  initialStarted = false
+) => {
   const [currentValue, setCurrentValue] = useState(min)
-  const [startFlag, setStartFlag] = useState<boolean>(false)
+  const [startFlag, setStartFlag] = useState<boolean>(initialStarted)
 
   const start = useCallback(() => {
     setStartFlag(true)
@@ -16,11 +22,13 @@ export const useNumberCycle = (min: number, max: number, interval: number) => {
   useEffect(() => {
     if (!startFlag) return
     const intervalId = setInterval(() => {
-      const rNum = getRandom(min, max)
-      setCurrentValue(rNum)
+      setCurrentValue((value) => {
+        if (random) return getRandom(min, max)
+        return value >= max ? min : value + 1
+      })
     }, interval)
     return () => clearInterval(intervalId)
-  }, [startFlag, min, max, interval])
+  }, [startFlag, min, max, interval, random])
 
   return { currentValue, start, stop, started: startFlag }
 }

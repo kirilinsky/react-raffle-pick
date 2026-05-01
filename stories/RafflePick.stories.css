@@ -1,0 +1,333 @@
+.raffle-story {
+  display: grid;
+  gap: 12px;
+  max-width: 320px;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+
+.raffle-story__caption {
+  margin: 0;
+  color: #52525b;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.raffle-demo {
+  align-items: center;
+  display: inline-flex;
+  gap: 12px;
+}
+
+.raffle-demo__value {
+  display: inline-grid;
+  min-width: 4ch;
+  place-items: center;
+  font-size: 48px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: filter, opacity, transform;
+}
+
+.raffle-demo__value--flip {
+  min-width: 3.4ch;
+  min-height: 1.24em;
+  border-radius: 6px;
+  background: linear-gradient(#27272a 0 48%, #18181b 48% 52%, #09090b 52% 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.16),
+    inset 0 -1px 0 rgb(0 0 0 / 0.45);
+  color: #fafafa;
+  overflow: hidden;
+  padding: 0.12em 0.18em;
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.raffle-demo__value--reel {
+  position: relative;
+  min-width: 3.8ch;
+  min-height: 1.28em;
+  border: 1px solid #27272a;
+  border-radius: 7px;
+  background:
+    linear-gradient(rgb(255 255 255 / 0.12), transparent 28% 72%, rgb(0 0 0 / 0.2)), #111827;
+  box-shadow:
+    inset 0 8px 12px rgb(255 255 255 / 0.08),
+    inset 0 -10px 16px rgb(0 0 0 / 0.42);
+  color: transparent;
+  overflow: hidden;
+  padding: 0.1em 0.22em;
+}
+
+.raffle-demo__value--name {
+  min-width: 7.6ch;
+  font-size: 38px;
+}
+
+.raffle-demo__value--reel::before {
+  content: attr(data-value);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #f8fafc;
+  text-shadow:
+    0 -1.25em 0 rgb(248 250 252 / 0.35),
+    0 1.25em 0 rgb(248 250 252 / 0.35);
+  transform: translate3d(0, 0, 0);
+  will-change: filter, transform;
+}
+
+.raffle-demo__value--reel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+  border-bottom: 1px solid rgb(0 0 0 / 0.36);
+  background: linear-gradient(transparent 0 42%, rgb(0 0 0 / 0.38) 48% 52%, transparent 58% 100%);
+  pointer-events: none;
+}
+
+.raffle-demo__button {
+  border: 1px solid #18181b;
+  border-radius: 8px;
+  background: #18181b;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 14px;
+}
+
+.raffle-demo__button:hover {
+  background: #3f3f46;
+}
+
+.raffle-demo__button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.raffle-panel {
+  --raffle-animation-duration: 140ms;
+  --raffle-animation-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  border: 1px solid #d4d4d8;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.raffle-panel--flip {
+  perspective: 700px;
+}
+
+.raffle-panel--reel {
+  perspective: 500px;
+}
+
+.raffle-panel[data-state='frozen'] {
+  border-color: #16a34a;
+}
+
+.raffle-panel[data-state='running'] .raffle-demo__value[data-animation='roll'] {
+  animation: raffle-roll-running 520ms linear infinite;
+}
+
+.raffle-panel[data-state='running'] .raffle-demo__value[data-animation='fade'] {
+  animation: raffle-fade-running 520ms ease-in-out infinite;
+}
+
+.raffle-panel[data-state='running'] .raffle-demo__value[data-animation='blur'] {
+  animation: raffle-blur-running 520ms ease-in-out infinite;
+}
+
+.raffle-panel[data-state='running'] .raffle-demo__value[data-animation='flip'] {
+  animation: raffle-flip-running 640ms ease-in-out infinite;
+}
+
+.raffle-panel[data-state='running'] .raffle-demo__value[data-animation='reel']::before {
+  animation: raffle-reel-running 420ms steps(4, end) infinite;
+}
+
+.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value[data-animation='roll'],
+.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value[data-animation='fade'],
+.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value[data-animation='blur'],
+.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value[data-animation='flip'] {
+  animation-duration: 760ms;
+  animation-timing-function: cubic-bezier(0.34, 0, 0.42, 1);
+}
+
+.raffle-panel[data-inertia][data-phase='starting']
+  .raffle-demo__value[data-animation='reel']::before {
+  animation-duration: 720ms;
+  animation-timing-function: steps(3, end);
+}
+
+.raffle-panel[data-inertia][data-phase='starting'][data-inertia-step='1']
+  .raffle-demo__value[data-animation='reel']::before {
+  animation-duration: 560ms;
+}
+
+.raffle-panel[data-inertia][data-phase='starting'][data-inertia-step='2']
+  .raffle-demo__value[data-animation='reel']::before {
+  animation-duration: 420ms;
+}
+
+.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value[data-animation='roll'],
+.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value[data-animation='fade'],
+.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value[data-animation='blur'],
+.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value[data-animation='flip'] {
+  animation-duration: 960ms;
+  animation-timing-function: cubic-bezier(0.18, 0.78, 0.22, 1);
+}
+
+.raffle-panel[data-inertia][data-phase='settling']
+  .raffle-demo__value[data-animation='reel']::before {
+  animation-duration: 520ms;
+  animation-timing-function: steps(3, end);
+}
+
+.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='1']
+  .raffle-demo__value[data-animation='reel']::before {
+  animation-duration: 700ms;
+}
+
+.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='2']
+  .raffle-demo__value[data-animation='reel']::before {
+  animation-duration: 900ms;
+}
+
+.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='3']
+  .raffle-demo__value[data-animation='reel']::before {
+  animation-duration: 1120ms;
+}
+
+.raffle-panel[data-inertia][data-phase='starting'] .raffle-demo__value--reel,
+.raffle-panel[data-inertia][data-phase='settling'] .raffle-demo__value--reel {
+  animation: raffle-reel-click 180ms steps(2, end) infinite;
+}
+
+.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='2']
+  .raffle-demo__value--reel {
+  animation-duration: 240ms;
+}
+
+.raffle-panel[data-inertia][data-phase='settling'][data-inertia-step='3']
+  .raffle-demo__value--reel {
+  animation-duration: 320ms;
+}
+
+.raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='roll'],
+.raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='fade'],
+.raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='blur'],
+.raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='flip'],
+.raffle-panel[data-state='frozen'] .raffle-demo__value[data-animation='reel']::before {
+  animation: raffle-settle 180ms var(--raffle-animation-easing);
+}
+
+@keyframes raffle-roll-running {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -0.08em, 0);
+  }
+}
+
+@keyframes raffle-fade-running {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.82;
+  }
+}
+
+@keyframes raffle-blur-running {
+  0%,
+  100% {
+    filter: blur(0);
+  }
+
+  50% {
+    filter: blur(1.25px);
+  }
+}
+
+@keyframes raffle-flip-running {
+  0%,
+  100% {
+    transform: rotateX(0);
+  }
+
+  50% {
+    transform: rotateX(-10deg);
+  }
+}
+
+@keyframes raffle-settle {
+  from {
+    transform: scale(0.98);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes raffle-reel-running {
+  0% {
+    filter: blur(1.4px);
+    transform: translate3d(0, -1.25em, 0) rotateX(8deg);
+  }
+
+  40% {
+    filter: blur(0.6px);
+    transform: translate3d(0, -0.22em, 0) rotateX(2deg);
+  }
+
+  68% {
+    filter: blur(0.25px);
+    transform: translate3d(0, 0.08em, 0) rotateX(0);
+  }
+
+  100% {
+    filter: blur(1.4px);
+    transform: translate3d(0, 1.25em, 0) rotateX(-8deg);
+  }
+}
+
+@keyframes raffle-reel-click {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 0.025em, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .raffle-panel .raffle-demo__value {
+    animation: none;
+  }
+
+  .raffle-panel .raffle-demo__value--reel::before {
+    animation: none;
+  }
+}

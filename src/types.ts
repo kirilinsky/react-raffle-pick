@@ -1,13 +1,17 @@
 import type { CSSProperties } from 'react'
 
-export type AnimationType = 'roll' | 'fade' | 'blur'
+export type AnimationType = 'roll' | 'fade' | 'blur' | 'flip' | 'reel'
+export type RafflePickValue = number | string
 
 export interface RafflePickProps {
+  items?: string[]
   min?: number
   max?: number
   interval?: number
+  random?: boolean
+  inertia?: boolean
   animationType?: AnimationType
-  onSelect?: (value: number) => void
+  onSelect?: (value: RafflePickValue) => void
   buttonLabel?: string
   className?: string
   valueClassName?: string
