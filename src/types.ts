@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 export type AnimationType = 'roll' | 'fade' | 'blur'
 
 export interface RafflePickProps {
@@ -8,5 +10,10 @@ export interface RafflePickProps {
   onSelect?: (value: number) => void
   buttonLabel?: string
   className?: string
+  valueClassName?: string
+  buttonClassName?: string
+  style?: CSSProperties
+  valueStyle?: CSSProperties
+  buttonStyle?: CSSProperties
   autoStart?: boolean
 }
