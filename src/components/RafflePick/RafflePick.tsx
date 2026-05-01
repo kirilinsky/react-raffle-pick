@@ -43,6 +43,7 @@ export function RafflePick({
   }
 
   const label = state === 'frozen' ? 'Pick Again' : buttonLabel
+  const valueKey = `${animationType}-${currentValue}`
 
   return (
     <div
@@ -51,7 +52,12 @@ export function RafflePick({
       data-animation={animationType}
       style={style}
     >
-      <span className={joinClassNames('rrp-value', valueClassName)} style={valueStyle}>
+      <span
+        key={valueKey}
+        className={joinClassNames('rrp-value', valueClassName)}
+        data-animation={animationType}
+        style={valueStyle}
+      >
         {currentValue}
       </span>
       <button
