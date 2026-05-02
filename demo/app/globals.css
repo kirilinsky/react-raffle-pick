@@ -58,40 +58,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.hero-slots[data-phase='idle'] .rrp-slot__cell {
-  position: relative;
-  color: transparent;
-}
-
-.hero-slots[data-phase='idle'] .rrp-slot__cell::before {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: var(--burgundy);
-}
-
-.hero-slots[data-phase='idle'] .rrp-slot[data-slot-index='0'] .rrp-slot__cell::before {
-  content: '⚛';
-}
-
-.hero-slots[data-phase='idle'] .rrp-slot[data-slot-index='1'] .rrp-slot__cell::before {
-  content: 'r';
-}
-
-.hero-slots[data-phase='idle'] .rrp-slot[data-slot-index='2'] .rrp-slot__cell::before {
-  content: 'a';
-}
-
-.hero-slots[data-phase='idle'] .rrp-slot[data-slot-index='3'] .rrp-slot__cell::before,
-.hero-slots[data-phase='idle'] .rrp-slot[data-slot-index='4'] .rrp-slot__cell::before {
-  content: 'f';
-}
-
-.hero-slots[data-phase='idle'] .rrp-slot[data-slot-index='5'] .rrp-slot__cell::before {
-  content: 'l';
-}
-
-.hero-slots[data-phase='idle'] .rrp-slot[data-slot-index='6'] .rrp-slot__cell::before {
-  content: 'e';
+.hero-slot .rrp-slot__cell {
+  line-height: 1;
+  margin-top: -3px;
 }
