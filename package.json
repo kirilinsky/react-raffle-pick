@@ -48,7 +48,7 @@
     "build-storybook": "storybook build",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "changeset publish --provenance"
+    "release": "changeset publish"
   },
   "peerDependencies": {
     "react": ">=17",
