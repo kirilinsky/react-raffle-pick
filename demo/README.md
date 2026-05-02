@@ -8,3 +8,4 @@ npm run dev
 ```
 
 For Vercel, import this repository and set the project root to `demo`.
+The included `vercel.json` points the output directory at `.next`.
