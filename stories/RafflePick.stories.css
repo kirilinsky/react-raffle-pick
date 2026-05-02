@@ -88,6 +88,412 @@
   opacity: 0.72;
 }
 
+.raffle-countdown {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+}
+
+.raffle-custom {
+  display: grid;
+  gap: 16px;
+  border: 1px solid #d4d4d8;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 320px;
+}
+
+.raffle-custom__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Slot machine ------------------------------------------------------------ */
+
+.slot-machine {
+  display: inline-grid;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #b91c1c, #7f1d1d);
+  box-shadow:
+    0 12px 32px rgb(0 0 0 / 0.3),
+    inset 0 1px 0 rgb(255 255 255 / 0.16);
+}
+
+.slot-machine__row {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #18181b;
+  box-shadow: inset 0 4px 8px rgb(0 0 0 / 0.55);
+}
+
+.slot-machine__cell {
+  position: relative;
+  display: inline-block;
+  width: 56px;
+  height: 1.4em;
+  border-radius: 6px;
+  background: #fafafa;
+  color: #18181b;
+  font-size: 42px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  border: 2px solid #fbbf24;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.slot-machine__cell .rrp-slot__col {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(-1.4em);
+  animation: slot-roll var(--rrp-tick, 80ms) linear infinite;
+}
+
+.slot-machine__cell[data-stopped] .rrp-slot__col {
+  animation: slot-land 320ms cubic-bezier(0.2, 1.4, 0.4, 1) forwards;
+}
+
+.slot-machine__cell .rrp-slot__cell {
+  display: block;
+  height: 1.4em;
+  text-align: center;
+}
+
+.slot-machine__cell[data-stopped] {
+  border-color: #16a34a;
+}
+
+.slot-machine__cell--symbol {
+  font-size: 38px;
+  width: 64px;
+}
+
+.slot-machine__button {
+  border: 0;
+  border-radius: 999px;
+  background: #fbbf24;
+  color: #18181b;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 12px 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  align-self: center;
+  box-shadow: 0 4px 0 #b45309;
+}
+
+.slot-machine__button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #b45309;
+}
+
+@keyframes slot-roll {
+  from {
+    transform: translateY(-1.4em);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slot-land {
+  0% {
+    transform: translateY(-1em);
+  }
+  70% {
+    transform: translateY(-1.55em);
+  }
+  100% {
+    transform: translateY(-1.4em);
+  }
+}
+
+/* Recipes ----------------------------------------------------------------- */
+
+.recipes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 24px;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+}
+
+.recipe {
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* 1. Profile card */
+.recipe--card {
+  display: grid;
+  gap: 16px;
+  border: 1px solid #e4e4e7;
+  background: #fff;
+}
+
+.recipe-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.recipe-card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+}
+
+.recipe-card__meta {
+  display: grid;
+  gap: 2px;
+}
+
+.recipe-card__title {
+  color: #71717a;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.recipe-card__value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #18181b;
+}
+
+.recipe-card__button {
+  border: 0;
+  border-radius: 8px;
+  background: #18181b;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 14px;
+}
+
+/* 2. Hero countdown */
+.recipe--hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #18181b, #27272a);
+  color: #fff;
+  padding: 32px;
+  text-align: center;
+}
+
+.recipe-hero__ring {
+  width: 56px !important;
+  height: 56px !important;
+}
+
+.recipe-hero__ring .rrp-countdown__track {
+  stroke: rgb(255 255 255 / 0.18);
+}
+
+.recipe-hero__ring .rrp-countdown__bar {
+  stroke: #fbbf24;
+}
+
+.recipe-hero__ring .rrp-countdown__label {
+  color: #fff;
+  font-size: 16px;
+}
+
+.recipe-hero__value {
+  font-size: 72px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.recipe-hero__button {
+  border: 0;
+  border-radius: 999px;
+  background: #fbbf24;
+  color: #18181b;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 12px 22px;
+}
+
+/* 3. Inline chip */
+.recipe--inline {
+  border: 1px dashed #d4d4d8;
+  background: #fafafa;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #3f3f46;
+}
+
+.recipe-inline__value {
+  display: inline-block;
+  padding: 2px 10px;
+  margin: 0 2px;
+  border-radius: 6px;
+  background: #18181b;
+  color: #fff;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+  text-align: center;
+}
+
+.recipe-inline__button {
+  border: 0;
+  background: none;
+  color: #2563eb;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0;
+  text-decoration: underline;
+}
+
+/* 4. Slot machine split */
+.recipe--split {
+  display: grid;
+  gap: 16px;
+  border: 1px solid #18181b;
+  background: #09090b;
+  color: #fafafa;
+}
+
+.recipe-split__display {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 12px;
+  background: #18181b;
+  border-radius: 8px;
+  box-shadow: inset 0 4px 8px rgb(0 0 0 / 0.55);
+}
+
+.recipe-split__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.recipe-split__controls .rrp-countdown__track {
+  stroke: rgb(255 255 255 / 0.2);
+}
+
+.recipe-split__controls .rrp-countdown__bar {
+  stroke: #fbbf24;
+}
+
+.recipe-split__controls .rrp-countdown__label {
+  color: #fff;
+}
+
+.recipe-split__button {
+  border: 0;
+  border-radius: 8px;
+  background: #fbbf24;
+  color: #18181b;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 10px 18px;
+}
+
+/* 5. Badge with custom countdown */
+.recipe--badge {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #e4e4e7;
+  background: #fff;
+  padding: 16px;
+}
+
+.recipe-badge__value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #18181b;
+  font-variant-numeric: tabular-nums;
+}
+
+.recipe-badge__timer {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.recipe-badge__button {
+  border: 0;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 8px 14px;
+  width: fit-content;
+}
+
+.raffle-countdown .rrp-countdown__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.raffle-countdown .rrp-countdown__track {
+  fill: none;
+  stroke: #e4e4e7;
+  stroke-width: 3;
+}
+
+.raffle-countdown .rrp-countdown__bar {
+  fill: none;
+  stroke: #18181b;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 100.53;
+  stroke-dashoffset: 0;
+  animation: raffle-countdown var(--rrp-countdown, 5s) linear forwards;
+}
+
+.raffle-countdown .rrp-countdown__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #18181b;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes raffle-countdown {
+  to {
+    stroke-dashoffset: 100.53;
+  }
+}
+
 .raffle-panel {
   --raffle-animation-duration: 140ms;
   --raffle-animation-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
