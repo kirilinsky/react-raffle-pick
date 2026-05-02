@@ -39,7 +39,7 @@ export const useNumberCycle = ({
       onTickRef.current?.(next)
     }, interval)
     return () => clearInterval(id)
-  }, [running, interval, min, max, random])
+  }, [running, interval, min, max, random, valueRef])
 
   return valueRef
 }

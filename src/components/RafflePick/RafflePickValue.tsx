@@ -1,5 +1,4 @@
 import {
-  createElement,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -63,17 +62,18 @@ export function RafflePickValue({
     [style, cycleInterval]
   )
 
-  return createElement(
-    as as ElementType,
-    {
-      ref: nodeRef,
-      className: cls,
-      'data-animation': animation,
-      'data-value': displayed,
-      'data-phase': phase,
-      'data-inertia-step': step,
-      style: mergedStyle,
-    },
-    displayed
+  const Comp = as as ElementType
+  return (
+    <Comp
+      ref={nodeRef}
+      className={cls}
+      data-animation={animation}
+      data-value={displayed}
+      data-phase={phase}
+      data-inertia-step={step}
+      style={mergedStyle}
+    >
+      {displayed}
+    </Comp>
   )
 }

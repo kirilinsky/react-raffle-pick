@@ -1,6 +1,7 @@
 import {
   createElement,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -39,7 +40,9 @@ export function RafflePickRoot({
     : 'idle'
 
   const itemsRef = useRef(items)
-  itemsRef.current = items
+  useEffect(() => {
+    itemsRef.current = items
+  }, [items])
 
   const displayValue = useCallback((index: number): RafflePickValue => {
     const its = itemsRef.current
@@ -47,7 +50,7 @@ export function RafflePickRoot({
   }, [])
 
   const [displayed, setDisplayed] = useState<RafflePickValue>(() =>
-    displayValue(cycleMin)
+    items && items.length > 0 ? items[cycleMin] : cycleMin
   )
 
   const subscribersRef = useRef<Set<(value: number) => void>>(new Set())
