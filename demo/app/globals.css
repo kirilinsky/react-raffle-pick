@@ -20,7 +20,7 @@
   --line-2: #c5b794;
 
   /* Brand */
-  --burgundy: #6f1a25;
+  --burgundy: #7c1d29;
   --burgundy-deep: #4a0f18;
   --burgundy-light: #8a2230;
 
@@ -61,4 +61,41 @@ body {
 .hero-slot .rrp-slot__cell {
   line-height: 1;
   margin-top: -3px;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--cx, 0), 110vh, 0) rotate(720deg);
+    opacity: 0.9;
+  }
+}
+
+.animate-confetti-fall {
+  animation-name: confetti-fall;
+  animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1);
+  animation-fill-mode: forwards;
+  border-radius: 2px;
+}
+
+@keyframes result-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-result-pop {
+  animation: result-pop 500ms cubic-bezier(0.2, 1, 0.3, 1.4) both;
 }
