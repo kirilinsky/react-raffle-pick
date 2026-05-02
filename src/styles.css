@@ -4,29 +4,36 @@
 
 .rrp-slot {
   display: inline-block;
+  position: relative;
   overflow: hidden;
-  height: 1em;
-  line-height: 1em;
   vertical-align: baseline;
 }
 .rrp-slot__col {
-  display: flex;
-  flex-direction: column;
-  transform: translateY(-1em);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300%;
+  transform: translate3d(0, -33.3333%, 0);
   animation: rrp-slot-reel var(--rrp-tick, 80ms) linear infinite;
+  will-change: transform;
 }
 .rrp-slot__cell {
-  display: block;
-  height: 1em;
-  line-height: 1em;
+  height: 33.3333%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  text-align: center;
 }
 .rrp-slot[data-stopped] .rrp-slot__col {
   animation: none;
-  transform: translateY(-1em);
+  transform: translate3d(0, -33.3333%, 0);
 }
 @keyframes rrp-slot-reel {
-  from { transform: translateY(-1em); }
-  to   { transform: translateY(-2em); }
+  from { transform: translate3d(0, -33.3333%, 0); }
+  to   { transform: translate3d(0, -66.6666%, 0); }
 }
 
 /* Value animations: opt-in via <RafflePick.Value animation="..." /> */

@@ -7,26 +7,30 @@ const pickRandom = (pool: string[]) =>
   pool[Math.floor(Math.random() * pool.length)] ?? ''
 
 const SLOT_BASE_CSS = `
-.rrp-slot{display:inline-block;overflow:hidden;height:1em;line-height:1em;vertical-align:baseline}
-.rrp-slot__col{display:flex;flex-direction:column;transform:translateY(-1em);animation:rrp-slot-reel var(--rrp-tick,80ms) linear infinite}
-.rrp-slot__cell{display:block;height:1em;line-height:1em}
-.rrp-slot[data-stopped] .rrp-slot__col{animation:none;transform:translateY(-1em)}
-@keyframes rrp-slot-reel{from{transform:translateY(-1em)}to{transform:translateY(-2em)}}
+.rrp-slot{display:inline-block;position:relative;overflow:hidden;vertical-align:baseline}
+.rrp-slot__col{position:absolute;top:0;left:0;right:0;height:300%;transform:translate3d(0,-33.3333%,0);animation:rrp-slot-reel var(--rrp-tick,80ms) linear infinite;will-change:transform}
+.rrp-slot__cell{height:33.3333%;display:grid;place-items:center;padding:0;margin:0;box-sizing:border-box;text-align:center}
+.rrp-slot[data-stopped] .rrp-slot__col{animation:none;transform:translate3d(0,-33.3333%,0)}
+@keyframes rrp-slot-reel{from{transform:translate3d(0,-33.3333%,0)}to{transform:translate3d(0,-66.6666%,0)}}
 `
 
-let slotStylesInjected = false
+const SLOT_STYLES_VERSION = '4'
 const injectSlotStyles = () => {
-  if (slotStylesInjected) return
   if (typeof document === 'undefined') return
-  if (document.querySelector('style[data-rrp-slot-base]')) {
-    slotStylesInjected = true
+  const existing = document.querySelector(
+    'style[data-rrp-slot-base]'
+  ) as HTMLStyleElement | null
+  if (existing) {
+    if (existing.getAttribute('data-rrp-slot-base') === SLOT_STYLES_VERSION)
+      return
+    existing.textContent = SLOT_BASE_CSS
+    existing.setAttribute('data-rrp-slot-base', SLOT_STYLES_VERSION)
     return
   }
   const tag = document.createElement('style')
-  tag.setAttribute('data-rrp-slot-base', '')
+  tag.setAttribute('data-rrp-slot-base', SLOT_STYLES_VERSION)
   tag.textContent = SLOT_BASE_CSS
   document.head.appendChild(tag)
-  slotStylesInjected = true
 }
 
 interface SlotRefs {
