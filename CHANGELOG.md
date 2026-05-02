@@ -1,5 +1,13 @@
 # react-raffle-picker
 
+## 0.2.2
+
+### Patch Changes
+
+- 5d9a085: ### Slot reel layout fix
+
+  Reel cells now correctly center the current value vertically and horizontally regardless of font metrics or external CSS.
+
 ## 0.2.1
 
 ### Patch Changes
