@@ -3,6 +3,11 @@
   "version": "0.2.0",
   "description": "Headless React raffle picker for giveaways, winner draws, countdowns, and slot-machine UIs.",
   "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -71,9 +76,6 @@
   ],
   "author": "Kirilinsky (https://github.com/kirilinsky)",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "engines": {
     "node": ">=18"
   },
