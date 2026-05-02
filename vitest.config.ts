@@ -10,9 +10,21 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 export default defineConfig({
   plugins: [react()],
   test: {
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'html'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.d.ts',
+        'src/test/**',
+        'src/**/*.stories.{ts,tsx}',
+        'src/index.ts',
+      ],
+    },
     projects: [{
       extends: true,
       test: {
+        name: 'unit',
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./src/test/setup.ts']

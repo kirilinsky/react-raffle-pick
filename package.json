@@ -1,30 +1,51 @@
 {
-  "name": "react-raffle-pick",
+  "name": "react-raffle-picker",
   "version": "0.1.0",
-  "description": "A React component for giveaways and raffles. Numbers or names.",
+  "description": "Headless React raffle picker for giveaways, winner draws, countdowns, and slot-machine UIs.",
   "type": "module",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
+      "types": {
+        "import": "./dist/index.d.mts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
   },
+  "sideEffects": false,
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kirilinsky/react-raffle-pick.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kirilinsky/react-raffle-pick/issues"
+  },
+  "homepage": "https://github.com/kirilinsky/react-raffle-pick#readme",
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint src",
     "format": "prettier --write src",
+    "knip": "knip",
+    "publint": "publint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish --provenance"
   },
   "peerDependencies": {
     "react": ">=17",
@@ -34,11 +55,24 @@
     "react",
     "raffle",
     "giveaway",
-    "component"
+    "winner",
+    "picker",
+    "random-picker",
+    "draw",
+    "lottery",
+    "slot-machine",
+    "countdown",
+    "headless",
+    "compound-components",
+    "react-component"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
+    "@changesets/cli": "^2.27.0",
     "@chromatic-com/storybook": "^5.1.2",
     "@eslint/js": "^9.0.1",
     "@storybook/addon-a11y": "^10.3.5",
@@ -58,8 +92,10 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-storybook": "^10.3.5",
     "jsdom": "^29.0.2",
+    "knip": "^5.40.0",
     "playwright": "^1.59.1",
     "prettier": "^3.8.3",
+    "publint": "^0.3.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "storybook": "^10.3.5",

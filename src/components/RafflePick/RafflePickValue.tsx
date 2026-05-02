@@ -36,8 +36,10 @@ export function RafflePickValue({
       const txt = String(displayValue(value))
       node.textContent = txt
       node.setAttribute('data-value', txt)
-      const anims = node.getAnimations({ subtree: true })
-      for (let i = 0; i < anims.length; i++) anims[i].currentTime = 0
+      if (typeof node.getAnimations === 'function') {
+        const anims = node.getAnimations({ subtree: true })
+        for (let i = 0; i < anims.length; i++) anims[i].currentTime = 0
+      }
     },
     [displayValue]
   )

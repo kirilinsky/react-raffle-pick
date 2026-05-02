@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { RafflePick } from '../src/components/RafflePick'
 import './RafflePick.stories.css'
 

@@ -2,7 +2,7 @@
 
 ## Concept
 
-`RafflePick` ships as a **headless compound component**, not a monolithic widget.
+`RafflePicker` ships as a **headless compound component**, not a monolithic widget.
 
 The root component owns the raffle engine (cycling, phase machine, selection) and exposes it through React context. Sub-components (`Value`, `Button`, `Countdown`) are dumb consumers that read the context and render minimal markup with stable class hooks. The user composes them anywhere inside the root — in any order, nested in any layout, repeated, or omitted.
 
@@ -19,9 +19,9 @@ This inverts the current model. Instead of one component with twenty style/class
 ## Public API
 
 ```tsx
-import { RafflePick } from 'react-raffle-pick'
+import { RafflePick } from 'react-raffle-picker'
 
-<RafflePick min={1} max={100} interval={100} inertia onSelect={(v) => console.log(v)}>
+;<RafflePick min={1} max={100} interval={100} inertia onSelect={(v) => console.log(v)}>
   <RafflePick.Value animation="roll" className="my-value" />
   <RafflePick.Button>Pick Winner</RafflePick.Button>
   <RafflePick.Countdown seconds={5} className="my-ring" />
@@ -32,18 +32,18 @@ import { RafflePick } from 'react-raffle-pick'
 
 Holds engine state. Provides context. Renders children inside an optional wrapper element.
 
-| Prop          | Type                            | Notes                               |
-| ------------- | ------------------------------- | ----------------------------------- |
-| `min`, `max`  | `number`                        | Numeric range (ignored if `items`). |
-| `items`       | `string[]`                      | Switches to item mode.              |
-| `interval`    | `number` (ms, clamped ≥ 50)     | Tick speed.                         |
-| `random`      | `boolean`                       | Random vs sequential cycling.       |
-| `inertia`     | `boolean`                       | Soft start / soft stop ramp.        |
-| `autoStart`   | `boolean`                       | Begin cycling on mount.             |
-| `onSelect`    | `(value) => void`               | Fires once on freeze.               |
-| `as`          | `keyof JSX.IntrinsicElements`   | Wrapper tag (default `'div'`).      |
-| `className`   | `string`                        | Wrapper class.                      |
-| `children`    | `ReactNode`                     | Compound children.                  |
+| Prop         | Type                          | Notes                               |
+| ------------ | ----------------------------- | ----------------------------------- |
+| `min`, `max` | `number`                      | Numeric range (ignored if `items`). |
+| `items`      | `string[]`                    | Switches to item mode.              |
+| `interval`   | `number` (ms, clamped ≥ 50)   | Tick speed.                         |
+| `random`     | `boolean`                     | Random vs sequential cycling.       |
+| `inertia`    | `boolean`                     | Soft start / soft stop ramp.        |
+| `autoStart`  | `boolean`                     | Begin cycling on mount.             |
+| `onSelect`   | `(value) => void`             | Fires once on freeze.               |
+| `as`         | `keyof JSX.IntrinsicElements` | Wrapper tag (default `'div'`).      |
+| `className`  | `string`                      | Wrapper class.                      |
+| `children`   | `ReactNode`                   | Compound children.                  |
 
 ### `<RafflePick.Value>`
 
@@ -63,13 +63,13 @@ Optional. When `seconds` is set, schedules auto-freeze after expiry and renders 
 interface RaffleContext {
   // State (drives render of sub-components)
   phase: 'idle' | 'starting' | 'running' | 'settling' | 'frozen'
-  step: number              // inertia step
+  step: number // inertia step
   displayed: RafflePickValue // value to render in JSX (post-freeze, pre-cycle)
 
   // Imperative handles (for sub-components that bypass React)
-  valueRef: RefObject<number>      // live cycling value
-  cycleInterval: number            // current tick ms (post-multiplier)
-  registerValueNode: (node: HTMLElement | null) => void  // for imperative DOM writes
+  valueRef: RefObject<number> // live cycling value
+  cycleInterval: number // current tick ms (post-multiplier)
+  registerValueNode: (node: HTMLElement | null) => void // for imperative DOM writes
 
   // Actions
   start: () => void
@@ -124,14 +124,14 @@ src/
 
 ## Migration from monolithic API
 
-| Old                     | New                                                        |
-| ----------------------- | ---------------------------------------------------------- |
+| Old                       | New                                                        |
+| ------------------------- | ---------------------------------------------------------- |
 | `<RafflePick {...all} />` | `<RafflePick {...engine}><Value /><Button /></RafflePick>` |
-| `valueClassName="x"`    | `<RafflePick.Value className="x" />`                       |
-| `buttonClassName="x"`   | `<RafflePick.Button className="x" />`                      |
-| `countdown={5}`         | `<RafflePick.Countdown seconds={5} />`                     |
-| `animationType="roll"`  | `<RafflePick.Value animation="roll" />`                    |
-| `buttonLabel="Pick"`    | `<RafflePick.Button>Pick</RafflePick.Button>`              |
+| `valueClassName="x"`      | `<RafflePick.Value className="x" />`                       |
+| `buttonClassName="x"`     | `<RafflePick.Button className="x" />`                      |
+| `countdown={5}`           | `<RafflePick.Countdown seconds={5} />`                     |
+| `animationType="roll"`    | `<RafflePick.Value animation="roll" />`                    |
+| `buttonLabel="Pick"`      | `<RafflePick.Button>Pick</RafflePick.Button>`              |
 
 Engine props (`min`, `max`, `interval`, `random`, `inertia`, `autoStart`, `items`, `onSelect`) stay on the root.
 

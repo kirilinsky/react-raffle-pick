@@ -1,9 +1,24 @@
-# react-raffle-pick
+<div align="center">
+  <img src="https://i.ibb.co/k2MRQCqT/logo-nbg.png" alt="react-raffle-picker logo placeholder" width="160" />
+
+  <h1>react-raffle-picker</h1>
+
+  <p><strong>Tiny raffle engine. Big winner energy.</strong></p>
+
+  <p>
+    <a href="https://codecov.io/gh/kirilinsky/react-raffle-picker">
+      <img src="https://codecov.io/gh/kirilinsky/react-raffle-picker/branch/main/graph/badge.svg" alt="Codecov coverage" />
+    </a>
+    <a href="https://bundlephobia.com/package/react-raffle-picker">
+      <img src="https://img.shields.io/bundlephobia/minzip/react-raffle-picker?label=gzip" alt="Gzip bundle size" />
+    </a>
+  </p>
+</div>
 
 A headless, composable React component for giveaways, raffles, and slot-machine UIs. Cycles numbers or names with smooth animations and freezes on a winner. Performant on slow devices — high-frequency tick updates bypass React.
 
 ```bash
-npm install react-raffle-pick
+npm install react-raffle-picker
 ```
 
 ## Preview
@@ -33,7 +48,7 @@ npm install react-raffle-pick
 
 ## Idea
 
-`react-raffle-pick` ships as a **headless compound component**, not a monolithic widget. The root owns the engine — cycling, phase machine, freeze logic — and exposes it through React context. Sub-components (`Value`, `Button`, `Countdown`, `Slots`) are dumb consumers that you compose anywhere in your tree.
+`react-raffle-picker` ships as a **headless compound component**, not a monolithic widget. The root owns the engine — cycling, phase machine, freeze logic — and exposes it through React context. Sub-components (`Value`, `Button`, `Countdown`, `Slots`) are dumb consumers that you compose anywhere in your tree.
 
 This means:
 
@@ -43,7 +58,8 @@ This means:
 - **Performance preserved.** Tick updates write to DOM imperatively via refs — no React re-render per tick. Context only re-renders on phase boundaries (start, settle, freeze).
 
 ```tsx
-import { RafflePick } from 'react-raffle-pick'
+import { RafflePick } from 'react-raffle-picker';
+---
 
 <RafflePick min={1} max={100} interval={100} inertia onSelect={(v) => console.log(v)}>
   <RafflePick.Value animation="roll" className="my-value" />
@@ -57,30 +73,30 @@ import { RafflePick } from 'react-raffle-pick'
 
 Provides context. Renders an optional wrapper element (`as` prop, default `'div'`).
 
-| Prop          | Type                                | Default     | Notes                                          |
-| ------------- | ----------------------------------- | ----------- | ---------------------------------------------- |
-| `min`, `max`  | `number`                            | `1`, `100`  | Numeric range. Ignored if `items` provided.    |
-| `items`       | `string[]`                          | —           | Switches to item mode (cycles through names).  |
-| `interval`    | `number` (ms, clamped ≥ 50)         | `100`       | Tick speed.                                    |
-| `random`      | `boolean`                           | `true`      | Random pick vs sequential.                     |
-| `inertia`     | `boolean`                           | `false`     | Soft start / soft stop ramp.                   |
-| `autoStart`   | `boolean`                           | `true`      | Begin cycling on mount.                        |
-| `onSelect`    | `(value) => void`                   | —           | Fires once per round on freeze.                |
-| `as`          | `ElementType`                       | `'div'`     | Wrapper tag.                                   |
-| `className`   | `string`                            | —           | Wrapper class.                                 |
-| `style`       | `CSSProperties`                     | —           | Wrapper style.                                 |
-| `children`    | `ReactNode`                         | —           | Sub-components.                                |
+| Prop         | Type                        | Default    | Notes                                         |
+| ------------ | --------------------------- | ---------- | --------------------------------------------- |
+| `min`, `max` | `number`                    | `1`, `100` | Numeric range. Ignored if `items` provided.   |
+| `items`      | `string[]`                  | —          | Switches to item mode (cycles through names). |
+| `interval`   | `number` (ms, clamped ≥ 50) | `100`      | Tick speed.                                   |
+| `random`     | `boolean`                   | `true`     | Random pick vs sequential.                    |
+| `inertia`    | `boolean`                   | `false`    | Soft start / soft stop ramp.                  |
+| `autoStart`  | `boolean`                   | `true`     | Begin cycling on mount.                       |
+| `onSelect`   | `(value) => void`           | —          | Fires once per round on freeze.               |
+| `as`         | `ElementType`               | `'div'`    | Wrapper tag.                                  |
+| `className`  | `string`                    | —          | Wrapper class.                                |
+| `style`      | `CSSProperties`             | —          | Wrapper style.                                |
+| `children`   | `ReactNode`                 | —          | Sub-components.                               |
 
 ### `<RafflePick.Value>`
 
 Renders the cycling value. Updates `textContent` imperatively each tick (no React re-render).
 
-| Prop        | Type                                                   | Default  |
-| ----------- | ------------------------------------------------------ | -------- |
-| `animation` | `'roll' \| 'fade' \| 'blur' \| 'reel'`                 | `'roll'` |
-| `as`        | `ElementType`                                          | `'span'` |
-| `className` | `string`                                               | —        |
-| `style`     | `CSSProperties`                                        | —        |
+| Prop        | Type                                   | Default  |
+| ----------- | -------------------------------------- | -------- |
+| `animation` | `'roll' \| 'fade' \| 'blur' \| 'reel'` | `'roll'` |
+| `as`        | `ElementType`                          | `'span'` |
+| `className` | `string`                               | —        |
+| `style`     | `CSSProperties`                        | —        |
 
 Multiple `Value` instances inside one root are supported — all subscribe to the same tick.
 
@@ -88,38 +104,38 @@ Multiple `Value` instances inside one root are supported — all subscribe to th
 
 Toggles start / freeze based on phase. Disabled during settling.
 
-| Prop          | Type            | Notes                                            |
-| ------------- | --------------- | ------------------------------------------------ |
-| `startLabel`  | `ReactNode`     | Shown in `idle` / `frozen` (click starts).       |
-| `stopLabel`   | `ReactNode`     | Shown in `running` / `starting` (click stops).   |
-| `waitLabel`   | `ReactNode`     | Shown in `settling` (button disabled).           |
-| `children`    | `ReactNode`     | Fallback label when state-specific label absent. |
-| `className`   | `string`        | —                                                |
-| `style`       | `CSSProperties` | —                                                |
+| Prop         | Type            | Notes                                            |
+| ------------ | --------------- | ------------------------------------------------ |
+| `startLabel` | `ReactNode`     | Shown in `idle` / `frozen` (click starts).       |
+| `stopLabel`  | `ReactNode`     | Shown in `running` / `starting` (click stops).   |
+| `waitLabel`  | `ReactNode`     | Shown in `settling` (button disabled).           |
+| `children`   | `ReactNode`     | Fallback label when state-specific label absent. |
+| `className`  | `string`        | —                                                |
+| `style`      | `CSSProperties` | —                                                |
 
 ### `<RafflePick.Countdown>`
 
 Schedules auto-freeze after `seconds`. Renders an SVG ring + numeric label by default. Optional render-prop for custom output.
 
-| Prop        | Type                                | Notes                                          |
-| ----------- | ----------------------------------- | ---------------------------------------------- |
-| `seconds`   | `number` (required)                 | Auto-freeze delay. Renders only while running. |
-| `className` | `string`                            | —                                              |
-| `style`     | `CSSProperties`                     | —                                              |
-| `children`  | `(remaining: number) => ReactNode`  | Render-prop for custom UI.                     |
+| Prop        | Type                               | Notes                                          |
+| ----------- | ---------------------------------- | ---------------------------------------------- |
+| `seconds`   | `number` (required)                | Auto-freeze delay. Renders only while running. |
+| `className` | `string`                           | —                                              |
+| `style`     | `CSSProperties`                    | —                                              |
+| `children`  | `(remaining: number) => ReactNode` | Render-prop for custom UI.                     |
 
 ### `<RafflePick.Slots>`
 
 Independent multi-reel slot machine. Each reel ticks on its own and stops with a stagger.
 
-| Prop                                              | Type                       | Default        | Notes                                          |
-| ------------------------------------------------- | -------------------------- | -------------- | ---------------------------------------------- |
-| `length`                                          | `number`                   | `3`            | Number of reels.                               |
-| `chars`                                           | `string`                   | `'0123456789'` | Charset pool. Emoji-safe (code-point split).   |
-| `spinInterval`                                    | `number` (ms, ≥ 50)        | `80`           | Tick rate per reel.                            |
-| `staggerMs`                                       | `number`                   | `220`          | Delay between consecutive reel stops.          |
-| `onResult`                                        | `(joined: string) => void` | —              | Fires when the last reel lands.                |
-| `className`, `slotClassName`, `style`, `slotStyle`| various                    | —              | Style hooks.                                   |
+| Prop                                               | Type                       | Default        | Notes                                        |
+| -------------------------------------------------- | -------------------------- | -------------- | -------------------------------------------- |
+| `length`                                           | `number`                   | `3`            | Number of reels.                             |
+| `chars`                                            | `string`                   | `'0123456789'` | Charset pool. Emoji-safe (code-point split). |
+| `spinInterval`                                     | `number` (ms, ≥ 50)        | `80`           | Tick rate per reel.                          |
+| `staggerMs`                                        | `number`                   | `220`          | Delay between consecutive reel stops.        |
+| `onResult`                                         | `(joined: string) => void` | —              | Fires when the last reel lands.              |
+| `className`, `slotClassName`, `style`, `slotStyle` | various                    | —              | Style hooks.                                 |
 
 ## Recipes
 

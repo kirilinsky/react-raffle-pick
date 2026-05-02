@@ -63,7 +63,7 @@ export function RafflePickSlots({
     if (s.next) s.next.textContent = next
     s.currChar = curr
     if (s.root) s.root.setAttribute('data-value', curr)
-    if (s.col) {
+    if (s.col && typeof s.col.getAnimations === 'function') {
       const anims = s.col.getAnimations()
       for (let a = 0; a < anims.length; a++) anims[a].currentTime = 0
     }

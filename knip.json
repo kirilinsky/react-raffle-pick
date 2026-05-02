@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/index.ts"],
+  "project": ["src/**/*.{ts,tsx}"],
+  "ignore": ["dist/**", "storybook-static/**", "stories/**"],
+  "ignoreDependencies": ["@chromatic-com/storybook"],
+  "storybook": {
+    "config": [".storybook/**/*.{js,ts}"],
+    "entry": ["stories/**/*.stories.{js,ts,tsx}"]
+  }
+}
