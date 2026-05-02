@@ -1,3 +1,4 @@
+import 'react-raffle-picker/styles.css'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Antonio, Inter, JetBrains_Mono } from 'next/font/google'

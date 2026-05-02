@@ -10,6 +10,8 @@ export interface RaffleContextValue {
   inertia: boolean
   hasItems: boolean
   initialIndex: number
+  initialValue?: RafflePickValue
+  finalValue?: RafflePickValue
 
   valueRef: RefObject<number>
   displayValue: (index: number) => RafflePickValue

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://i.ibb.co/k2MRQCqT/logo-nbg.png" alt="react-raffle-picker logo placeholder" width="160" />
+  <img src="https://i.ibb.co/yB50hJTv/logo-nbg.png" alt="react-raffle-picker logo placeholder" width="160" />
 
   <h1>react-raffle-picker</h1>
 
@@ -69,7 +69,7 @@ This means:
 ```tsx
 import { RafflePick } from 'react-raffle-picker'
 
-<RafflePick min={1} max={100} interval={100} inertia onSelect={(v) => console.log(v)}>
+;<RafflePick min={1} max={100} interval={100} inertia onSelect={(v) => console.log(v)}>
   <RafflePick.Value animation="roll" className="my-value" />
   <RafflePick.Button startLabel="Pick" stopLabel="Stop" />
 </RafflePick>
@@ -79,7 +79,7 @@ import { RafflePick } from 'react-raffle-picker'
 
 The library is headless — no global stylesheet is required for `Value`, `Button`, or `Countdown`. You bring your own CSS.
 
-For the **slot reel** (`<RafflePick.Slots>`), a minimal stylesheet *is* required to make the column animate. Two ways to load it:
+For the **slot reel** (`<RafflePick.Slots>`), a minimal stylesheet _is_ required to make the column animate. Two ways to load it:
 
 1. **Auto-injected at runtime** — `<RafflePick.Slots>` injects a `<style data-rrp-slot-base>` tag into `document.head` on first mount. No action needed in CSR apps.
 2. **Static import** (recommended for SSR / strict CSP / full control):
@@ -96,21 +96,21 @@ For the **slot reel** (`<RafflePick.Slots>`), a minimal stylesheet *is* required
 
 Provides context. Renders an optional wrapper element (`as` prop, default `'div'`).
 
-| Prop         | Type                        | Default    | Notes                                         |
-| ------------ | --------------------------- | ---------- | --------------------------------------------- |
-| `min`, `max` | `number`                    | `1`, `100` | Numeric range. Ignored if `items` provided.   |
-| `items`      | `string[]`                  | —          | Switches to item mode (cycles through names). |
-| `interval`   | `number` (ms, clamped ≥ 50) | `100`      | Tick speed.                                   |
-| `random`     | `boolean`                   | `true`     | Random pick vs sequential.                    |
-| `inertia`    | `boolean`                   | `false`    | Soft start / soft stop ramp.                  |
-| `autoStart`  | `boolean`                   | `true`     | Begin cycling on mount.                       |
-| `initialValue` | `number \| string`        | —          | Starting display before first run. Number for `min`/`max` mode, string for `items` mode. |
-| `finalValue`   | `number \| string`        | —          | Forces settle to land on this value. Cycle still appears random; only final freeze is rigged. |
-| `onSelect`   | `(value) => void`           | —          | Fires once per round on freeze.               |
-| `as`         | `ElementType`               | `'div'`    | Wrapper tag.                                  |
-| `className`  | `string`                    | —          | Wrapper class.                                |
-| `style`      | `CSSProperties`             | —          | Wrapper style.                                |
-| `children`   | `ReactNode`                 | —          | Sub-components.                               |
+| Prop           | Type                        | Default    | Notes                                                                                                                                                                    |
+| -------------- | --------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `min`, `max`   | `number`                    | `1`, `100` | Numeric range. Ignored if `items` provided.                                                                                                                              |
+| `items`        | `string[]`                  | —          | Switches to item mode (cycles through names).                                                                                                                            |
+| `interval`     | `number` (ms, clamped ≥ 50) | `100`      | Tick speed.                                                                                                                                                              |
+| `random`       | `boolean`                   | `true`     | Random pick vs sequential.                                                                                                                                               |
+| `inertia`      | `boolean`                   | `false`    | Soft start / soft stop ramp.                                                                                                                                             |
+| `autoStart`    | `boolean`                   | `true`     | Begin cycling on mount.                                                                                                                                                  |
+| `initialValue` | `number \| string`          | —          | Starting display before first run. Number for `min`/`max` mode, string for `items` mode. For `<Slots>`, each character seeds the corresponding reel.                     |
+| `finalValue`   | `number \| string`          | —          | Forces settle to land on this value. Cycle still appears random; only final freeze is rigged. For `<Slots>`, each character is the final char of the corresponding reel. |
+| `onSelect`     | `(value) => void`           | —          | Fires once per round on freeze.                                                                                                                                          |
+| `as`           | `ElementType`               | `'div'`    | Wrapper tag.                                                                                                                                                             |
+| `className`    | `string`                    | —          | Wrapper class.                                                                                                                                                           |
+| `style`        | `CSSProperties`             | —          | Wrapper style.                                                                                                                                                           |
+| `children`     | `ReactNode`                 | —          | Sub-components.                                                                                                                                                          |
 
 ### `<RafflePick.Value>`
 
@@ -152,6 +152,8 @@ Schedules auto-freeze after `seconds`. Renders an SVG ring + numeric label by de
 ### `<RafflePick.Slots>`
 
 Independent multi-reel slot machine. Each reel ticks on its own and stops with a stagger.
+
+`initialValue` (root prop) seeds reels char-by-char before the first run. `finalValue` rigs the freeze so each reel lands on the corresponding character — useful for predetermined winners or scripted demos.
 
 | Prop                                               | Type                       | Default        | Notes                                        |
 | -------------------------------------------------- | -------------------------- | -------------- | -------------------------------------------- |

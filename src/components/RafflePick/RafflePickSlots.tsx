@@ -61,7 +61,22 @@ export function RafflePickSlots({
   onResult,
 }: RafflePickSlotsProps) {
   injectSlotStyles()
-  const { phase } = useRaffleContext('RafflePick.Slots')
+  const { phase, initialValue, finalValue } = useRaffleContext('RafflePick.Slots')
+
+  const initialChars = useMemo(() => {
+    const seed = typeof initialValue === 'string' ? initialValue : ''
+    return Array.from({ length }, (_, i) => seed[i] ?? '')
+  }, [initialValue, length])
+
+  const finalChars = useMemo(() => {
+    if (typeof finalValue !== 'string') return null
+    return Array.from({ length }, (_, i) => finalValue[i] ?? '')
+  }, [finalValue, length])
+
+  const finalCharsRef = useRef(finalChars)
+  useEffect(() => {
+    finalCharsRef.current = finalChars
+  }, [finalChars])
 
   const slotsRef = useRef<SlotRefs[]>([])
   const stopTimersRef = useRef<Array<ReturnType<typeof setTimeout>>>([])
@@ -125,6 +140,10 @@ export function RafflePickSlots({
     for (let i = 0; i < length; i++) {
       const id = setTimeout(() => {
         const s = slotsRef.current[i]
+        const forced = finalCharsRef.current?.[i]
+        if (forced) {
+          writeSlot(s, s.currChar, forced, forced)
+        }
         s.stopped = true
         if (s.root) s.root.setAttribute('data-stopped', '')
         finalRef.current[i] = s.currChar
@@ -139,16 +158,17 @@ export function RafflePickSlots({
 
   useEffect(() => {
     if (phase !== 'idle') return
-    const c = pool[0] ?? ''
+    const fallback = pool[0] ?? ''
     for (let i = 0; i < length; i++) {
       const s = slotsRef.current[i]
+      const c = initialChars[i] || fallback
       s.stopped = true
       writeSlot(s, c, c, c)
       if (s.root) {
-        s.root.removeAttribute('data-stopped')
+        s.root.setAttribute('data-stopped', '')
       }
     }
-  }, [phase, length, pool])
+  }, [phase, length, pool, initialChars])
 
   const cls = useMemo(() => joinClassNames('rrp-slots', className), [className])
   const slotCls = useMemo(
