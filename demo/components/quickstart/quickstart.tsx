@@ -33,7 +33,7 @@ export function Quickstart() {
   return (
     <Section space="md">
       <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
-        <div>
+        <div className="min-w-0">
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.16em] text-ink-3">
             30 seconds
           </p>
@@ -56,7 +56,7 @@ export function Quickstart() {
           </div>
         </div>
 
-        <div className="flex items-start gap-4">
+        <div className="flex min-w-0 items-start gap-4">
           <StepBadge n={2} />
           <div className="min-w-0 flex-1">
             <StepLabel>Compose</StepLabel>

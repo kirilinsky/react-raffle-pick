@@ -39,6 +39,8 @@ export function SlotCabinet() {
 
           <div className="relative z-10 mt-3 h-3.5 rounded-2 bg-gradient-to-b from-gold to-gold-deep shadow-[inset_0_-2px_4px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.15)]" />
 
+          <RafflePick.Countdown seconds={10} className="sr-only" />
+
           <RafflePick.Button
             className="absolute -right-9 top-1/2 z-30 h-44 w-14 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0 disabled:cursor-not-allowed max-[600px]:-right-7 max-[600px]:h-36 max-[600px]:w-12"
             startLabel={<LeverLabel />}

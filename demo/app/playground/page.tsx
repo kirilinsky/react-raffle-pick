@@ -26,15 +26,15 @@ export default function PlaygroundPage() {
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
-          <div className="order-2 lg:order-1">
+          <div className="order-2 min-w-0 lg:order-1">
             <ControlsPanel state={state} onChange={setState} />
           </div>
-          <div className="order-1 lg:order-2">
+          <div className="order-1 min-w-0 lg:order-2">
             <PreviewStage state={state} />
           </div>
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 min-w-0">
           <LiveCode state={state} />
         </div>
       </Container>

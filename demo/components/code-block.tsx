@@ -10,13 +10,11 @@ export function CodeBlock({ code }: { code: string }) {
       await navigator.clipboard.writeText(code)
       setCopied(true)
       setTimeout(() => setCopied(false), 1400)
-    } catch {
-      /* clipboard blocked — silent */
-    }
+    } catch {}
   }
 
   return (
-    <pre className="relative overflow-x-auto rounded-3 border border-[#2a241d] bg-[#1c1814] p-5 font-mono text-[13px] leading-relaxed text-[#e8dfc8]">
+    <pre className="relative max-w-full overflow-x-auto rounded-3 border border-[#2a241d] bg-[#1c1814] p-4 font-mono text-[12px] leading-relaxed text-[#e8dfc8] sm:p-5 sm:text-[13px]">
       <button
         type="button"
         onClick={onCopy}
