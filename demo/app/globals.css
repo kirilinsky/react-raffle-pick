@@ -1,10 +1,10 @@
 :root {
   color-scheme: light;
-  --bg: #f7f7f2;
-  --ink: #171717;
-  --muted: #62625a;
-  --line: #deded4;
-  --accent: #eab308;
+  --bg: #f4ede0;
+  --ink: #1a1410;
+  --muted: #5b5048;
+  --line: #d8ccb4;
+  --accent: #d4a04a;
 }
 
 * {
@@ -18,13 +18,9 @@ body {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at 50% -20%, rgb(234 179 8 / 0.18), transparent 36rem),
-    var(--bg);
+  background: var(--bg);
   color: var(--ink);
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 .page-shell {

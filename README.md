@@ -3,7 +3,7 @@
 
   <h1>react-raffle-picker</h1>
 
-  <p><strong>Tiny raffle engine. Big winner energy.</strong></p>
+  <p><strong>React like you just won. The raffle picker your UI deserves.</strong></p>
 
   <p>
     <a href="https://react-raffle-one.vercel.app/">Live demo</a>
