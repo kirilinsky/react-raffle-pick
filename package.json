@@ -16,9 +16,12 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.mjs"
     },
+    "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "dist"
   ],
@@ -31,7 +34,7 @@
   },
   "homepage": "https://react-raffle-one.vercel.app/",
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && cp src/styles.css dist/styles.css",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest",

@@ -1,0 +1,63 @@
+/* react-raffle-picker — base styles */
+/* Optional. Slot reel animation is also auto-injected at runtime. */
+/* Import via: import 'react-raffle-picker/styles.css' */
+
+.rrp-slot {
+  display: inline-block;
+  overflow: hidden;
+  height: 1em;
+  line-height: 1em;
+  vertical-align: baseline;
+}
+.rrp-slot__col {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(-1em);
+  animation: rrp-slot-reel var(--rrp-tick, 80ms) linear infinite;
+}
+.rrp-slot__cell {
+  display: block;
+  height: 1em;
+  line-height: 1em;
+}
+.rrp-slot[data-stopped] .rrp-slot__col {
+  animation: none;
+  transform: translateY(-1em);
+}
+@keyframes rrp-slot-reel {
+  from { transform: translateY(-1em); }
+  to   { transform: translateY(-2em); }
+}
+
+/* Value animations: opt-in via <RafflePick.Value animation="..." /> */
+.rrp-value {
+  display: inline-block;
+}
+.rrp-value[data-animation='roll'][data-phase='running'] {
+  animation: rrp-value-roll var(--rrp-tick, 100ms) linear;
+}
+.rrp-value[data-animation='fade'][data-phase='running'] {
+  animation: rrp-value-fade var(--rrp-tick, 100ms) linear;
+}
+.rrp-value[data-animation='blur'][data-phase='running'] {
+  animation: rrp-value-blur var(--rrp-tick, 100ms) linear;
+}
+.rrp-value[data-animation='reel'][data-phase='running'] {
+  animation: rrp-value-reel var(--rrp-tick, 100ms) linear;
+}
+@keyframes rrp-value-roll {
+  from { transform: translateY(-0.4em); opacity: 0.4; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+@keyframes rrp-value-fade {
+  from { opacity: 0.2; }
+  to   { opacity: 1; }
+}
+@keyframes rrp-value-blur {
+  from { filter: blur(4px); }
+  to   { filter: blur(0); }
+}
+@keyframes rrp-value-reel {
+  from { transform: translateY(-1em); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}

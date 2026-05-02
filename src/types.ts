@@ -11,6 +11,10 @@ export interface RafflePickRootProps {
   random?: boolean
   inertia?: boolean
   autoStart?: boolean
+  /** Value shown before first run. Number in min/max mode, string in items mode. */
+  initialValue?: RafflePickValue
+  /** When set, settle always lands on this value while cycle still appears random. */
+  finalValue?: RafflePickValue
   onSelect?: (value: RafflePickValue) => void
   as?: ElementType
   className?: string

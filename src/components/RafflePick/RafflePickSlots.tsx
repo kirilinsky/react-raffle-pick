@@ -6,6 +6,29 @@ import { useRaffleContext } from './context'
 const pickRandom = (pool: string[]) =>
   pool[Math.floor(Math.random() * pool.length)] ?? ''
 
+const SLOT_BASE_CSS = `
+.rrp-slot{display:inline-block;overflow:hidden;height:1em;line-height:1em;vertical-align:baseline}
+.rrp-slot__col{display:flex;flex-direction:column;transform:translateY(-1em);animation:rrp-slot-reel var(--rrp-tick,80ms) linear infinite}
+.rrp-slot__cell{display:block;height:1em;line-height:1em}
+.rrp-slot[data-stopped] .rrp-slot__col{animation:none;transform:translateY(-1em)}
+@keyframes rrp-slot-reel{from{transform:translateY(-1em)}to{transform:translateY(-2em)}}
+`
+
+let slotStylesInjected = false
+const injectSlotStyles = () => {
+  if (slotStylesInjected) return
+  if (typeof document === 'undefined') return
+  if (document.querySelector('style[data-rrp-slot-base]')) {
+    slotStylesInjected = true
+    return
+  }
+  const tag = document.createElement('style')
+  tag.setAttribute('data-rrp-slot-base', '')
+  tag.textContent = SLOT_BASE_CSS
+  document.head.appendChild(tag)
+  slotStylesInjected = true
+}
+
 interface SlotRefs {
   root: HTMLSpanElement | null
   col: HTMLSpanElement | null
@@ -37,6 +60,7 @@ export function RafflePickSlots({
   slotStyle,
   onResult,
 }: RafflePickSlotsProps) {
+  injectSlotStyles()
   const { phase } = useRaffleContext('RafflePick.Slots')
 
   const slotsRef = useRef<SlotRefs[]>([])
