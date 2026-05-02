@@ -62,8 +62,7 @@ This means:
 - **Performance preserved.** Tick updates write to DOM imperatively via refs — no React re-render per tick. Context only re-renders on phase boundaries (start, settle, freeze).
 
 ```tsx
-import { RafflePick } from 'react-raffle-picker';
----
+import { RafflePick } from 'react-raffle-picker'
 
 <RafflePick min={1} max={100} interval={100} inertia onSelect={(v) => console.log(v)}>
   <RafflePick.Value animation="roll" className="my-value" />

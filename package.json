@@ -24,10 +24,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kirilinsky/react-raffle-pick.git"
+    "url": "git+https://github.com/kirilinsky/react-raffle-picker.git"
   },
   "bugs": {
-    "url": "https://github.com/kirilinsky/react-raffle-pick/issues"
+    "url": "https://github.com/kirilinsky/react-raffle-picker/issues"
   },
   "homepage": "https://react-raffle-one.vercel.app/",
   "scripts": {

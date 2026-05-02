@@ -1,4 +1,4 @@
-# react-raffle-pick demo
+# react-raffle-picker demo
 
 Minimal Next.js placeholder app for the future public demo.
 
