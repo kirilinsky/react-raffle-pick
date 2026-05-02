@@ -1,6 +1,6 @@
 {
   "name": "react-raffle-picker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Headless React raffle picker for giveaways, winner draws, countdowns, and slot-machine UIs.",
   "type": "module",
   "main": "./dist/index.cjs",
