@@ -7,9 +7,14 @@
 
   <p>
     <a href="https://react-raffle-one.vercel.app/">Live demo</a>
+    ·
+    <a href="https://kirilinsky.github.io/react-raffle-picker/">Storybook</a>
   </p>
 
   <p>
+    <a href="https://kirilinsky.github.io/react-raffle-picker/">
+      <img src="https://img.shields.io/badge/storybook-live-ff4785?logo=storybook&logoColor=white" alt="Storybook" />
+    </a>
     <a href="https://codecov.io/gh/kirilinsky/react-raffle-picker">
       <img src="https://codecov.io/gh/kirilinsky/react-raffle-picker/branch/main/graph/badge.svg" alt="Codecov coverage" />
     </a>
