@@ -6,6 +6,10 @@
   <p><strong>Tiny raffle engine. Big winner energy.</strong></p>
 
   <p>
+    <a href="https://react-raffle-one.vercel.app/">Live demo</a>
+  </p>
+
+  <p>
     <a href="https://codecov.io/gh/kirilinsky/react-raffle-picker">
       <img src="https://codecov.io/gh/kirilinsky/react-raffle-picker/branch/main/graph/badge.svg" alt="Codecov coverage" />
     </a>

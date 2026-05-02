@@ -8,4 +8,6 @@ npm run dev
 ```
 
 For Vercel, import this repository and set the project root to `demo`.
-The included `vercel.json` points the output directory at `.next`.
+The included `vercel.json` keeps the framework pinned to Next.js; leave the
+Vercel Output Directory setting empty so Vercel can manage the Next.js build
+output itself.

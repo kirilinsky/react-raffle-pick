@@ -29,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/kirilinsky/react-raffle-pick/issues"
   },
-  "homepage": "https://github.com/kirilinsky/react-raffle-pick#readme",
+  "homepage": "https://react-raffle-one.vercel.app/",
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
