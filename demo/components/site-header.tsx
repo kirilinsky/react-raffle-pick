@@ -23,7 +23,7 @@ function GitHubIcon() {
   )
 }
 
-export function Header() {
+export function SiteHeader() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const generatedMenuId = useId()
@@ -34,7 +34,7 @@ export function Header() {
   }, [pathname])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-cream/85 backdrop-blur-[12px]">
+    <header className="sticky top-0 z-50 border-b border-line bg-[rgba(244,237,224,0.85)] backdrop-blur-[12px]">
       <div className="mx-auto flex h-16 max-w-[1240px] items-center gap-4 px-4 min-[820px]:px-6">
         <Link
           href="/"
@@ -73,7 +73,7 @@ export function Header() {
           href={githubHref}
           target="_blank"
           rel="noreferrer"
-          className="ml-1 hidden items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream transition-colors duration-150 hover:bg-burgundy hover:text-gold-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy min-[820px]:inline-flex"
+          className="ml-1 hidden items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-bg transition-colors duration-150 hover:bg-burgundy hover:text-gold-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy min-[820px]:inline-flex"
         >
           <GitHubIcon />
           GitHub
@@ -132,7 +132,7 @@ export function Header() {
             href={githubHref}
             target="_blank"
             rel="noreferrer"
-            className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream transition-colors duration-150 hover:bg-burgundy hover:text-gold-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy"
+            className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-bg transition-colors duration-150 hover:bg-burgundy hover:text-gold-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy"
           >
             <GitHubIcon />
             GitHub
@@ -142,3 +142,5 @@ export function Header() {
     </header>
   )
 }
+
+export { SiteHeader as Header }

@@ -2,37 +2,40 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Antonio, Inter, JetBrains_Mono } from 'next/font/google'
 import type { ReactNode } from 'react'
-import { Header } from '../components/site-header'
+import { SiteHeader } from '@/components/site-header'
 
-const antonio = Antonio({
+const display = Antonio({
   subsets: ['latin'],
-  variable: '--font-antonio',
+  weight: ['400', '600', '700'],
+  variable: '--font-display',
   display: 'swap',
 })
 
-const inter = Inter({
+const body = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-body',
   display: 'swap',
 })
 
-const jetBrainsMono = JetBrains_Mono({
+const mono = JetBrains_Mono({
   subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-mono',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'react-raffle-picker demo',
-  description: 'A tiny placeholder for the upcoming react-raffle-picker demo.',
+  title: 'react-raffle-picker — Demo',
+  description: 'Tiny raffle engine. Big winner energy.',
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${antonio.variable} ${inter.variable} ${jetBrainsMono.variable} font-sans`}>
-        <Header />
-        {children}
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+      <body className="bg-bg text-ink min-h-screen flex flex-col antialiased">
+        <SiteHeader />
+        <main className="flex-1">{children}</main>
       </body>
     </html>
   )
