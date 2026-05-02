@@ -97,6 +97,80 @@ describe('<RafflePick> compound', () => {
     expect(['Alice', 'Bob', 'Carol']).toContain(onSelect.mock.calls[0][0])
   })
 
+  it('initialValue sets starting display in numeric mode', () => {
+    render(
+      <RafflePick min={1} max={10} initialValue={7} autoStart={false}>
+        <RafflePick.Value />
+      </RafflePick>
+    )
+    expect(screen.getByText('7')).toBeInTheDocument()
+  })
+
+  it('initialValue sets starting display in items mode', () => {
+    render(
+      <RafflePick
+        items={['Alice', 'Bob', 'Carol']}
+        initialValue="Carol"
+        autoStart={false}
+      >
+        <RafflePick.Value />
+      </RafflePick>
+    )
+    expect(screen.getByText('Carol')).toBeInTheDocument()
+  })
+
+  it('finalValue forces settle result in numeric mode', () => {
+    const onSelect = vi.fn()
+    render(
+      <RafflePick
+        min={1}
+        max={10}
+        finalValue={5}
+        autoStart={false}
+        onSelect={onSelect}
+      >
+        <RafflePick.Value />
+        <RafflePick.Button startLabel="Start" stopLabel="Stop" />
+      </RafflePick>
+    )
+    const btn = screen.getByRole('button')
+    act(() => {
+      btn.click()
+    })
+    act(() => {
+      vi.advanceTimersByTime(500)
+    })
+    act(() => {
+      btn.click()
+    })
+    expect(onSelect).toHaveBeenCalledWith(5)
+  })
+
+  it('finalValue forces settle result in items mode', () => {
+    const onSelect = vi.fn()
+    render(
+      <RafflePick
+        items={['Alice', 'Bob', 'Carol']}
+        finalValue="Bob"
+        autoStart={false}
+        onSelect={onSelect}
+      >
+        <RafflePick.Value />
+        <RafflePick.Button startLabel="Go" stopLabel="Stop" />
+      </RafflePick>
+    )
+    act(() => {
+      screen.getByRole('button').click()
+    })
+    act(() => {
+      vi.advanceTimersByTime(500)
+    })
+    act(() => {
+      screen.getByRole('button').click()
+    })
+    expect(onSelect).toHaveBeenCalledWith('Bob')
+  })
+
   it('throws when sub-component is rendered outside root', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
     expect(() => render(<RafflePick.Value />)).toThrow(/RafflePick.Value/)

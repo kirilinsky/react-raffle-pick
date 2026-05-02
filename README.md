@@ -75,6 +75,21 @@ import { RafflePick } from 'react-raffle-picker'
 </RafflePick>
 ```
 
+### Styles
+
+The library is headless — no global stylesheet is required for `Value`, `Button`, or `Countdown`. You bring your own CSS.
+
+For the **slot reel** (`<RafflePick.Slots>`), a minimal stylesheet *is* required to make the column animate. Two ways to load it:
+
+1. **Auto-injected at runtime** — `<RafflePick.Slots>` injects a `<style data-rrp-slot-base>` tag into `document.head` on first mount. No action needed in CSR apps.
+2. **Static import** (recommended for SSR / strict CSP / full control):
+
+   ```ts
+   import 'react-raffle-picker/styles.css'
+   ```
+
+   This file also includes opt-in keyframes for `<RafflePick.Value animation="roll|fade|blur|reel" />`. Override or replace any selector in your own CSS.
+
 ## Components
 
 ### `<RafflePick>` (root)
@@ -89,6 +104,8 @@ Provides context. Renders an optional wrapper element (`as` prop, default `'div'
 | `random`     | `boolean`                   | `true`     | Random pick vs sequential.                    |
 | `inertia`    | `boolean`                   | `false`    | Soft start / soft stop ramp.                  |
 | `autoStart`  | `boolean`                   | `true`     | Begin cycling on mount.                       |
+| `initialValue` | `number \| string`        | —          | Starting display before first run. Number for `min`/`max` mode, string for `items` mode. |
+| `finalValue`   | `number \| string`        | —          | Forces settle to land on this value. Cycle still appears random; only final freeze is rigged. |
 | `onSelect`   | `(value) => void`           | —          | Fires once per round on freeze.               |
 | `as`         | `ElementType`               | `'div'`    | Wrapper tag.                                  |
 | `className`  | `string`                    | —          | Wrapper class.                                |
@@ -163,6 +180,23 @@ Independent multi-reel slot machine. Each reel ticks on its own and stops with a
   <RafflePick.Countdown seconds={5} className="hero__ring" />
   <RafflePick.Value animation="blur" className="hero__value" />
   <RafflePick.Button startLabel="Start Draw" stopLabel="Stop" className="hero__btn" />
+</RafflePick>
+```
+
+### Rigged draw with predetermined winner
+
+`finalValue` lands the freeze on a specific value while the cycle still looks random — useful for staged demos, scripted reveals, or showing a known winner.
+
+```tsx
+<RafflePick
+  items={['Alice', 'Bob', 'Carol']}
+  initialValue="Alice"
+  finalValue="Bob"
+  autoStart={false}
+  onSelect={(winner) => console.log(winner)} // always 'Bob'
+>
+  <RafflePick.Value animation="reel" />
+  <RafflePick.Button startLabel="Draw" stopLabel="Reveal" />
 </RafflePick>
 ```
 
