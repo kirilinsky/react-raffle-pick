@@ -1,5 +1,6 @@
 import { Container } from '../container'
 import { HeroText } from './hero-text'
+import { HeroTape } from './hero-tape'
 
 export function HeroStage() {
   return (
@@ -7,6 +8,7 @@ export function HeroStage() {
       <Container className="max-w-[1100px]">
         <HeroText />
       </Container>
+      <HeroTape />
     </div>
   )
 }
