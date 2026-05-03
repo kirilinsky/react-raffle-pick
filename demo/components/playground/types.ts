@@ -23,3 +23,8 @@ export const DEFAULT_STATE: PlaygroundState = {
   countdown: 0,
   autoStart: false,
 }
+
+export const normalizeRange = (min: number, max: number) => ({
+  min: Math.min(min, max),
+  max: Math.max(min, max),
+})

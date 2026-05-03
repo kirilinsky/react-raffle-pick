@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { RafflePick } from 'react-raffle-picker'
-import type { PlaygroundState } from './types'
+import { normalizeRange, type PlaygroundState } from './types'
 
 const parseItems = (raw: string) =>
   raw
@@ -15,9 +15,10 @@ export function PreviewStage({ state }: { state: PlaygroundState }) {
 
   const items = parseItems(state.itemsRaw)
   const safeItems = items.length > 0 ? items : ['—']
+  const range = normalizeRange(state.min, state.max)
   const modeProps =
     state.mode === 'range'
-      ? { min: state.min, max: state.max }
+      ? { min: range.min, max: range.max }
       : { items: safeItems }
 
   return (

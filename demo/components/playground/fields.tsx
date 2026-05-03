@@ -45,7 +45,10 @@ export function NumberField({
         id={id}
         type="number"
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
+        onChange={(e) => {
+          const next = e.currentTarget.valueAsNumber
+          if (Number.isFinite(next)) onChange(next)
+        }}
         className={inputCls}
       />
     </div>

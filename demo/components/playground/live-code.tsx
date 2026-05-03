@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { PlaygroundState } from './types'
+import { normalizeRange, type PlaygroundState } from './types'
 
 const parseItems = (raw: string) =>
   raw
@@ -12,7 +12,8 @@ const parseItems = (raw: string) =>
 export function buildCode(s: PlaygroundState): string {
   const propsArr: string[] = []
   if (s.mode === 'range') {
-    propsArr.push(`min={${s.min}}`, `max={${s.max}}`)
+    const range = normalizeRange(s.min, s.max)
+    propsArr.push(`min={${range.min}}`, `max={${range.max}}`)
   } else {
     const items = parseItems(s.itemsRaw)
     propsArr.push(`items={${JSON.stringify(items.length ? items : ['—'])}}`)
