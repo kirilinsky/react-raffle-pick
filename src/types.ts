@@ -23,12 +23,22 @@ export interface RafflePickRootProps {
   inertia?: boolean
   /** Begin cycling on mount. Set `false` to wait for `<RafflePick.Button>`/`start()`. */
   autoStart?: boolean
+  /**
+   * Exclude previously frozen values from future rounds within this mounted
+   * instance — no duplicate winners across sequential draws. Default `true`.
+   * Set `false` to allow the same value/entry to be picked again. History is
+   * cleared on unmount (or via `resetHistory()` from `useRaffleContext()`) —
+   * remount with a new `key` for a fresh no-repeat pool.
+   */
+  noRepeat?: boolean
   /** Value shown before first run. Number in min/max mode, string in items mode. */
   initialValue?: RafflePickValue
   /** When set, settle always lands on this value while cycle still appears random. */
   finalValue?: RafflePickValue
   /** Fires once per round, when the phase settles to `frozen`. */
   onSelect?: (value: RafflePickValue) => void
+  /** Fires when `start()`/`<RafflePick.Button>` is used but `noRepeat` has exhausted the pool. */
+  onExhausted?: () => void
   /** Wrapper element/component. Default `'div'`. */
   as?: ElementType
   /** Wrapper class. */

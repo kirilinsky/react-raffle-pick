@@ -12,10 +12,10 @@ export function RafflePickButton({
   waitLabel,
   disabled,
 }: RafflePickButtonProps) {
-  const { phase, start, freeze, reset } = useRaffleContext('RafflePick.Button')
+  const { phase, exhausted, start, freeze, reset } = useRaffleContext('RafflePick.Button')
 
   const running = phase === 'starting' || phase === 'running' || phase === 'settling'
-  const isDisabled = disabled || phase === 'settling'
+  const isDisabled = disabled || phase === 'settling' || exhausted
 
   const handleClick = useCallback(() => {
     if (isDisabled) return

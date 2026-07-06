@@ -104,13 +104,17 @@ Provides context. Renders an optional wrapper element (`as` prop, default `'div'
 | `random`       | `boolean`                   | `true`     | Random pick vs sequential.                                                                                                                                               |
 | `inertia`      | `boolean`                   | `false`    | Soft start / soft stop ramp.                                                                                                                                             |
 | `autoStart`    | `boolean`                   | `true`     | Begin cycling on mount.                                                                                                                                                  |
+| `noRepeat`     | `boolean`                   | `true`     | Exclude previously frozen values from later rounds — no duplicate winners across sequential draws in the same mounted instance. Set `false` to allow repeats.           |
 | `initialValue` | `number \| string`          | —          | Starting display before first run. Number for `min`/`max` mode, string for `items` mode. For `<Slots>`, each character seeds the corresponding reel.                     |
 | `finalValue`   | `number \| string`          | —          | Forces settle to land on this value. Cycle still appears random; only final freeze is rigged. For `<Slots>`, each character is the final char of the corresponding reel. |
 | `onSelect`     | `(value) => void`           | —          | Fires once per round on freeze.                                                                                                                                          |
+| `onExhausted`  | `() => void`                | —          | Fires when `start()` is called but `noRepeat` has already drawn every candidate.                                                                                        |
 | `as`           | `ElementType`               | `'div'`    | Wrapper tag.                                                                                                                                                             |
 | `className`    | `string`                    | —          | Wrapper class.                                                                                                                                                           |
 | `style`        | `CSSProperties`             | —          | Wrapper style.                                                                                                                                                           |
 | `children`     | `ReactNode`                 | —          | Sub-components.                                                                                                                                                          |
+
+**`noRepeat` in a nutshell:** draw history lives in the mounted `<RafflePick>` instance (not persisted, not synced across instances). `<RafflePick.Button>` auto-disables once the pool is exhausted. For a custom trigger built on `useRaffleContext()`, `start()` becomes a no-op and fires `onExhausted` once the pool is empty. Call `useRaffleContext().resetHistory()` to allow repeats again without unmounting, or change the component's `key` to remount with a clean slate.
 
 ### `<RafflePick.Value>`
 
@@ -201,6 +205,31 @@ Independent multi-reel slot machine. Each reel ticks on its own and stops with a
   <RafflePick.Value animation="reel" />
   <RafflePick.Button startLabel="Draw" stopLabel="Reveal" />
 </RafflePick>
+```
+
+### Multi-round draw without repeat winners
+
+`noRepeat` defaults to `true` — each subsequent round in the same mounted
+`<RafflePick>` automatically excludes everyone already drawn. The Button
+disables itself once the pool is empty.
+
+```tsx
+function Giveaway() {
+  const [winners, setWinners] = useState<string[]>([])
+  return (
+    <RafflePick
+      items={['Alice', 'Bob', 'Carol', 'Dave']}
+      autoStart={false}
+      onSelect={(winner) => setWinners((w) => [...w, String(winner)])}
+      onExhausted={() => console.log('everyone already won')}
+    >
+      <RafflePick.Value />
+      <RafflePick.Button startLabel="Draw next" stopLabel="Stop" />
+    </RafflePick>
+  )
+  // Click "Draw next" repeatedly — Alice, Bob, Carol, Dave each win once,
+  // then the button disables itself. Pass noRepeat={false} to allow repeats.
+}
 ```
 
 ### Slot machine with custom result handler

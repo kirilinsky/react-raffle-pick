@@ -13,6 +13,7 @@ const meta = {
     random: true,
     inertia: false,
     autoStart: true,
+    noRepeat: true,
   },
   argTypes: {
     min: { control: { type: 'number' } },
@@ -22,7 +23,9 @@ const meta = {
     random: { control: 'boolean' },
     inertia: { control: 'boolean' },
     autoStart: { control: 'boolean' },
+    noRepeat: { control: 'boolean' },
     onSelect: { action: 'selected' },
+    onExhausted: { action: 'exhausted' },
   },
 } satisfies Meta<typeof RafflePick>
 
@@ -146,6 +149,20 @@ export const ManualStart: Story = {
     <RafflePick {...args}>
       <RafflePick.Value className="raffle-demo__value" />
       <RafflePick.Button className="raffle-demo__button">Start</RafflePick.Button>
+    </RafflePick>
+  ),
+}
+
+export const NoRepeatDraw: Story = {
+  args: {
+    items: ['Alice', 'Bob', 'Carol', 'Dave'],
+    autoStart: false,
+    className: 'raffle-demo',
+  },
+  render: (args) => (
+    <RafflePick {...args}>
+      <RafflePick.Value className="raffle-demo__value" />
+      <RafflePick.Button className="raffle-demo__button">Draw next</RafflePick.Button>
     </RafflePick>
   ),
 }

@@ -15,7 +15,14 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <RafflePick min={1} max={100} interval={100} inertia autoStart={false} className="raffle-demo raffle-panel">
+      <RafflePick
+        min={1}
+        max={100}
+        interval={100}
+        inertia
+        autoStart={false}
+        className="raffle-demo raffle-panel"
+      >
         <RafflePick.Value animation="roll" className="raffle-demo__value" />
         <Story />
       </RafflePick>
