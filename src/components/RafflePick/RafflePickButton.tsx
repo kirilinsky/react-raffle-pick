@@ -10,38 +10,35 @@ export function RafflePickButton({
   startLabel,
   stopLabel,
   waitLabel,
+  disabled,
 }: RafflePickButtonProps) {
-  const { phase, start, freeze, reset } = useRaffleContext('RafflePick.Button')
+  const { phase, exhausted, start, freeze, reset } = useRaffleContext('RafflePick.Button')
 
-  const running =
-    phase === 'starting' || phase === 'running' || phase === 'settling'
+  const running = phase === 'starting' || phase === 'running' || phase === 'settling'
+  const isDisabled = disabled || phase === 'settling' || exhausted
 
   const handleClick = useCallback(() => {
-    if (phase === 'settling') return
+    if (isDisabled) return
     if (running) {
       freeze()
       return
     }
     reset()
     start()
-  }, [phase, running, freeze, reset, start])
+  }, [isDisabled, running, freeze, reset, start])
 
-  const cls = useMemo(
-    () => joinClassNames('rrp-button', className),
-    [className]
-  )
+  const cls = useMemo(() => joinClassNames('rrp-button', className), [className])
 
   let label: typeof children
   if (phase === 'settling') label = waitLabel ?? stopLabel ?? children
-  else if (phase === 'starting' || phase === 'running')
-    label = stopLabel ?? children
+  else if (phase === 'starting' || phase === 'running') label = stopLabel ?? children
   else label = startLabel ?? children
 
   return (
     <button
       className={cls}
       style={style}
-      disabled={phase === 'settling'}
+      disabled={isDisabled}
       onClick={handleClick}
       data-phase={phase}
     >

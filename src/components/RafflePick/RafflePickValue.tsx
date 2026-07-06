@@ -4,11 +4,26 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  type CSSProperties,
   type ElementType,
 } from 'react'
 import { joinClassNames } from '../../utils/class-names'
 import type { RafflePickValueProps } from '../../types'
 import { useRaffleContext } from './context'
+
+// Kept off the visual node so cycling ticks (textContent writes every
+// `interval` ms) never trigger AT announcements — only freeze does.
+const SR_ONLY_STYLE: CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0, 0, 0, 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+}
 
 export function RafflePickValue({
   animation = 'roll',
@@ -16,15 +31,8 @@ export function RafflePickValue({
   style,
   as = 'span',
 }: RafflePickValueProps) {
-  const {
-    phase,
-    step,
-    displayed,
-    cycleInterval,
-    valueRef,
-    displayValue,
-    subscribe,
-  } = useRaffleContext('RafflePick.Value')
+  const { phase, step, displayed, cycleInterval, valueRef, displayValue, subscribe } =
+    useRaffleContext('RafflePick.Value')
 
   const nodeRef = useRef<HTMLElement | null>(null)
 
@@ -45,17 +53,13 @@ export function RafflePickValue({
 
   useEffect(() => subscribe(writeNode), [subscribe, writeNode])
 
-  const running =
-    phase === 'starting' || phase === 'running' || phase === 'settling'
+  const running = phase === 'starting' || phase === 'running' || phase === 'settling'
 
   useLayoutEffect(() => {
     if (running) writeNode(valueRef.current)
   })
 
-  const cls = useMemo(
-    () => joinClassNames('rrp-value', className),
-    [className]
-  )
+  const cls = useMemo(() => joinClassNames('rrp-value', className), [className])
 
   const mergedStyle = useMemo(
     () => ({ ...style, ['--rrp-tick' as string]: `${cycleInterval}ms` }),
@@ -64,16 +68,23 @@ export function RafflePickValue({
 
   const Comp = as as ElementType
   return (
-    <Comp
-      ref={nodeRef}
-      className={cls}
-      data-animation={animation}
-      data-value={displayed}
-      data-phase={phase}
-      data-inertia-step={step}
-      style={mergedStyle}
-    >
-      {displayed}
-    </Comp>
+    <>
+      <Comp
+        ref={nodeRef}
+        className={cls}
+        data-animation={animation}
+        data-value={displayed}
+        data-phase={phase}
+        data-inertia-step={step}
+        style={mergedStyle}
+        aria-hidden="true"
+      >
+        {displayed}
+      </Comp>
+      {/* Announced to AT once per round, on freeze — not on every tick. */}
+      <span role="status" aria-live="polite" style={SR_ONLY_STYLE}>
+        {phase === 'frozen' ? String(displayed) : ''}
+      </span>
+    </>
   )
 }

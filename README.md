@@ -104,13 +104,17 @@ Provides context. Renders an optional wrapper element (`as` prop, default `'div'
 | `random`       | `boolean`                   | `true`     | Random pick vs sequential.                                                                                                                                               |
 | `inertia`      | `boolean`                   | `false`    | Soft start / soft stop ramp.                                                                                                                                             |
 | `autoStart`    | `boolean`                   | `true`     | Begin cycling on mount.                                                                                                                                                  |
+| `noRepeat`     | `boolean`                   | `true`     | Exclude previously frozen values from later rounds — no duplicate winners across sequential draws in the same mounted instance. Set `false` to allow repeats.           |
 | `initialValue` | `number \| string`          | —          | Starting display before first run. Number for `min`/`max` mode, string for `items` mode. For `<Slots>`, each character seeds the corresponding reel.                     |
 | `finalValue`   | `number \| string`          | —          | Forces settle to land on this value. Cycle still appears random; only final freeze is rigged. For `<Slots>`, each character is the final char of the corresponding reel. |
 | `onSelect`     | `(value) => void`           | —          | Fires once per round on freeze.                                                                                                                                          |
+| `onExhausted`  | `() => void`                | —          | Fires when `start()` is called but `noRepeat` has already drawn every candidate.                                                                                        |
 | `as`           | `ElementType`               | `'div'`    | Wrapper tag.                                                                                                                                                             |
 | `className`    | `string`                    | —          | Wrapper class.                                                                                                                                                           |
 | `style`        | `CSSProperties`             | —          | Wrapper style.                                                                                                                                                           |
 | `children`     | `ReactNode`                 | —          | Sub-components.                                                                                                                                                          |
+
+**`noRepeat` in a nutshell:** draw history lives in the mounted `<RafflePick>` instance (not persisted, not synced across instances). `<RafflePick.Button>` auto-disables once the pool is exhausted. For a custom trigger built on `useRaffleContext()`, `start()` becomes a no-op and fires `onExhausted` once the pool is empty. Call `useRaffleContext().resetHistory()` to allow repeats again without unmounting, or change the component's `key` to remount with a clean slate.
 
 ### `<RafflePick.Value>`
 
@@ -135,6 +139,7 @@ Toggles start / freeze based on phase. Disabled during settling.
 | `stopLabel`  | `ReactNode`     | Shown in `running` / `starting` (click stops).   |
 | `waitLabel`  | `ReactNode`     | Shown in `settling` (button disabled).           |
 | `children`   | `ReactNode`     | Fallback label when state-specific label absent. |
+| `disabled`   | `boolean`       | External disable, on top of the auto-disable during `settling`. |
 | `className`  | `string`        | —                                                |
 | `style`      | `CSSProperties` | —                                                |
 
@@ -202,6 +207,31 @@ Independent multi-reel slot machine. Each reel ticks on its own and stops with a
 </RafflePick>
 ```
 
+### Multi-round draw without repeat winners
+
+`noRepeat` defaults to `true` — each subsequent round in the same mounted
+`<RafflePick>` automatically excludes everyone already drawn. The Button
+disables itself once the pool is empty.
+
+```tsx
+function Giveaway() {
+  const [winners, setWinners] = useState<string[]>([])
+  return (
+    <RafflePick
+      items={['Alice', 'Bob', 'Carol', 'Dave']}
+      autoStart={false}
+      onSelect={(winner) => setWinners((w) => [...w, String(winner)])}
+      onExhausted={() => console.log('everyone already won')}
+    >
+      <RafflePick.Value />
+      <RafflePick.Button startLabel="Draw next" stopLabel="Stop" />
+    </RafflePick>
+  )
+  // Click "Draw next" repeatedly — Alice, Bob, Carol, Dave each win once,
+  // then the button disables itself. Pass noRepeat={false} to allow repeats.
+}
+```
+
 ### Slot machine with custom result handler
 
 ```tsx
@@ -223,6 +253,18 @@ Independent multi-reel slot machine. Each reel ticks on its own and stops with a
 - **`glitch` animation** — offset color-channel pulse for a digital noise feel during running.
 - Headless `useRafflePick()` hook for users who want zero rendering from the lib.
 - Render-prop variant of `<Value>` for fully custom DOM.
+
+## Accessibility
+
+- `<RafflePick.Value>` cycles are visual-only (`aria-hidden`) — high-frequency tick
+  updates are not announced. The frozen result *is* announced once per round via a
+  hidden `aria-live="polite"` region.
+- `<RafflePick.Countdown>`'s ring/label are `aria-hidden`; a one-time sr-only
+  announcement fires when the countdown starts. The result itself is still
+  announced by `<RafflePick.Value>` on freeze.
+- `styles.css` respects `prefers-reduced-motion: reduce` — value animations and the
+  slot reel disable their `animation` under that media query. If you ship fully
+  custom CSS instead of the bundled stylesheet, add the same guard yourself.
 
 ## Performance notes
 

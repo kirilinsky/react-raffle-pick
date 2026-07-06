@@ -17,11 +17,7 @@ RafflePick.Button = RafflePickButton
 RafflePick.Countdown = RafflePickCountdown
 RafflePick.Slots = RafflePickSlots
 
-export {
-  RafflePick,
-  RafflePickValue,
-  RafflePickButton,
-  RafflePickCountdown,
-  RafflePickSlots,
-}
+export { RafflePick, RafflePickValue, RafflePickButton, RafflePickCountdown, RafflePickSlots }
 export { useRaffleContext, RaffleContext } from './context'
+export type { RaffleContextValue } from './context'
+export type { RafflePickPhase } from '../../utils/inertia'

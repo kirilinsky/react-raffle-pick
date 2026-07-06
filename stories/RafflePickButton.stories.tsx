@@ -10,11 +10,19 @@ const meta = {
     startLabel: { control: 'text' },
     stopLabel: { control: 'text' },
     waitLabel: { control: 'text' },
+    disabled: { control: 'boolean' },
     className: { control: 'text' },
   },
   decorators: [
     (Story) => (
-      <RafflePick min={1} max={100} interval={100} inertia autoStart={false} className="raffle-demo raffle-panel">
+      <RafflePick
+        min={1}
+        max={100}
+        interval={100}
+        inertia
+        autoStart={false}
+        className="raffle-demo raffle-panel"
+      >
         <RafflePick.Value animation="roll" className="raffle-demo__value" />
         <Story />
       </RafflePick>
@@ -53,6 +61,14 @@ export const IconLabels: Story = {
 export const FallbackChildrenOnly: Story = {
   args: {
     children: 'Toggle',
+    className: 'raffle-demo__button',
+  },
+}
+
+export const ExternallyDisabled: Story = {
+  args: {
+    children: 'Pick',
+    disabled: true,
     className: 'raffle-demo__button',
   },
 }

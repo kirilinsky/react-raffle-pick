@@ -40,7 +40,9 @@ Holds engine state. Provides context. Renders children inside an optional wrappe
 | `random`     | `boolean`                     | Random vs sequential cycling.       |
 | `inertia`    | `boolean`                     | Soft start / soft stop ramp.        |
 | `autoStart`  | `boolean`                     | Begin cycling on mount.             |
+| `noRepeat`   | `boolean`                     | Default `true`. Excludes previously frozen values from later rounds. |
 | `onSelect`   | `(value) => void`             | Fires once on freeze.               |
+| `onExhausted`| `() => void`                  | Fires if `start()` runs after `noRepeat` has drawn every candidate. |
 | `as`         | `keyof JSX.IntrinsicElements` | Wrapper tag (default `'div'`).      |
 | `className`  | `string`                      | Wrapper class.                      |
 | `children`   | `ReactNode`                   | Compound children.                  |
@@ -72,16 +74,38 @@ interface RaffleContext {
   registerValueNode: (node: HTMLElement | null) => void // for imperative DOM writes
 
   // Actions
-  start: () => void
+  start: () => void   // no-op + fires onExhausted if noRepeat pool is empty
   freeze: () => void
   reset: () => void
+  resetHistory: () => void // clears noRepeat draw history without unmounting
 
   // Config (forwarded for sub-component defaults)
   inertia: boolean
   hasItems: boolean
   itemsRef: RefObject<string[] | undefined>
+  noRepeat: boolean
+  exhausted: boolean // noRepeat pool has no candidates left
+  remaining: number  // candidates left to draw
 }
 ```
+
+### `noRepeat` draw history
+
+Lives in a plain `Set<number>` ref on the root, mutated only inside the
+`onSettle`/`start` callbacks (never read during render — a ref read at render
+time breaks the render-purity contract `react-hooks/refs` enforces). A
+mirrored `drawnCount` piece of state exists purely so `exhausted`/`remaining`
+can be derived during render without touching the ref directly. `start()` is
+wrapped (`guardedStart`) to no-op and fire `onExhausted` once the pool is
+empty — this is what actually blocks a round, independent of whether the
+consumer used `<RafflePick.Button>` (which also auto-disables) or a fully
+custom trigger built on `useRaffleContext().start()`.
+
+Tick-time exclusion in `useNumberCycle` uses rejection sampling in random
+mode, bounded to a fixed retry count with a deterministic circular-scan
+fallback — unbounded retries would hang on a degenerate RNG (or just bad
+luck). Sequential mode's circular increment is naturally bounded by the pool
+size and needs no separate cap.
 
 ## Internal layering
 

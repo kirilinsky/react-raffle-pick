@@ -101,6 +101,105 @@ describe('useNumberCycle', () => {
     vi.restoreAllMocks()
   })
 
+  it('random mode skips excluded values', () => {
+    const onTick = vi.fn()
+    const valueRef = { current: 0 }
+    const excludedRef = { current: new Set([2, 3, 4, 5]) }
+    renderHook(() =>
+      useNumberCycle({
+        min: 1,
+        max: 5,
+        interval: 100,
+        random: true,
+        running: true,
+        valueRef,
+        excludedRef,
+        onTick,
+      })
+    )
+    act(() => {
+      vi.advanceTimersByTime(500)
+    })
+    for (const [value] of onTick.mock.calls) {
+      expect(value).toBe(1)
+    }
+    expect(onTick).toHaveBeenCalled()
+  })
+
+  it('random mode terminates even with a degenerate (constant) RNG', () => {
+    // Regression: a mocked/constant Math.random must never spin the
+    // rejection-sampling loop forever — it must fall back to a deterministic
+    // scan once retries are exhausted.
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+    const onTick = vi.fn()
+    const valueRef = { current: 1 }
+    const excludedRef = { current: new Set([1]) }
+    renderHook(() =>
+      useNumberCycle({
+        min: 1,
+        max: 5,
+        interval: 100,
+        random: true,
+        running: true,
+        valueRef,
+        excludedRef,
+        onTick,
+      })
+    )
+    act(() => {
+      vi.advanceTimersByTime(100)
+    })
+    expect(onTick).toHaveBeenCalledTimes(1)
+    expect(onTick).toHaveBeenCalledWith(2)
+    vi.restoreAllMocks()
+  })
+
+  it('sequential mode wraps past excluded values', () => {
+    const onTick = vi.fn()
+    const valueRef = { current: 0 }
+    const excludedRef = { current: new Set([1, 2]) }
+    renderHook(() =>
+      useNumberCycle({
+        min: 0,
+        max: 3,
+        interval: 100,
+        random: false,
+        running: true,
+        valueRef,
+        excludedRef,
+        onTick,
+      })
+    )
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+    expect(onTick).toHaveBeenNthCalledWith(1, 3)
+    expect(onTick).toHaveBeenNthCalledWith(2, 0)
+    expect(onTick).toHaveBeenNthCalledWith(3, 3)
+  })
+
+  it('ignores an exhausted excluded set (falls back to full range)', () => {
+    const onTick = vi.fn()
+    const valueRef = { current: 0 }
+    const excludedRef = { current: new Set([0, 1, 2]) }
+    renderHook(() =>
+      useNumberCycle({
+        min: 0,
+        max: 2,
+        interval: 100,
+        random: false,
+        running: true,
+        valueRef,
+        excludedRef,
+        onTick,
+      })
+    )
+    act(() => {
+      vi.advanceTimersByTime(100)
+    })
+    expect(onTick).toHaveBeenCalledWith(1)
+  })
+
   it('clears interval on unmount', () => {
     const onTick = vi.fn()
     const valueRef = { current: 0 }

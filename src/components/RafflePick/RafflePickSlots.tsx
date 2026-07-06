@@ -3,8 +3,7 @@ import { joinClassNames } from '../../utils/class-names'
 import type { RafflePickSlotsProps } from '../../types'
 import { useRaffleContext } from './context'
 
-const pickRandom = (pool: string[]) =>
-  pool[Math.floor(Math.random() * pool.length)] ?? ''
+const pickRandom = (pool: string[]) => pool[Math.floor(Math.random() * pool.length)] ?? ''
 
 const SLOT_BASE_CSS = `
 .rrp-slot{display:inline-block;position:relative;overflow:hidden;vertical-align:baseline}
@@ -17,12 +16,9 @@ const SLOT_BASE_CSS = `
 const SLOT_STYLES_VERSION = '4'
 const injectSlotStyles = () => {
   if (typeof document === 'undefined') return
-  const existing = document.querySelector(
-    'style[data-rrp-slot-base]'
-  ) as HTMLStyleElement | null
+  const existing = document.querySelector('style[data-rrp-slot-base]') as HTMLStyleElement | null
   if (existing) {
-    if (existing.getAttribute('data-rrp-slot-base') === SLOT_STYLES_VERSION)
-      return
+    if (existing.getAttribute('data-rrp-slot-base') === SLOT_STYLES_VERSION) return
     existing.textContent = SLOT_BASE_CSS
     existing.setAttribute('data-rrp-slot-base', SLOT_STYLES_VERSION)
     return
@@ -64,7 +60,7 @@ export function RafflePickSlots({
   slotStyle,
   onResult,
 }: RafflePickSlotsProps) {
-  injectSlotStyles()
+  useEffect(injectSlotStyles, [])
   const { phase, initialValue, finalValue } = useRaffleContext('RafflePick.Slots')
 
   const initialChars = useMemo(() => {
@@ -175,10 +171,7 @@ export function RafflePickSlots({
   }, [phase, length, pool, initialChars])
 
   const cls = useMemo(() => joinClassNames('rrp-slots', className), [className])
-  const slotCls = useMemo(
-    () => joinClassNames('rrp-slot', slotClassName),
-    [slotClassName]
-  )
+  const slotCls = useMemo(() => joinClassNames('rrp-slot', slotClassName), [slotClassName])
   const mergedSlotStyle = useMemo(
     () => ({ ...slotStyle, ['--rrp-tick' as string]: `${safeInterval}ms` }),
     [slotStyle, safeInterval]

@@ -22,9 +22,11 @@ export function RafflePickRoot({
   random = true,
   inertia = false,
   autoStart = true,
+  noRepeat = true,
   initialValue,
   finalValue,
   onSelect,
+  onExhausted,
   as = 'div',
   className,
   style,
@@ -34,12 +36,9 @@ export function RafflePickRoot({
   const hasItems = itemCount > 0
   const cycleMin = hasItems ? 0 : min
   const cycleMax = hasItems ? itemCount - 1 : max
+  const totalCandidates = cycleMax - cycleMin + 1
 
-  const initialPhase: RafflePickPhase = autoStart
-    ? inertia
-      ? 'starting'
-      : 'running'
-    : 'idle'
+  const initialPhase: RafflePickPhase = autoStart ? (inertia ? 'starting' : 'running') : 'idle'
 
   const itemsRef = useRef(items)
   useEffect(() => {
@@ -51,27 +50,24 @@ export function RafflePickRoot({
     return its && its.length > 0 ? its[index] : index
   }, [])
 
-  const valueToIndex = useCallback(
-    (value: RafflePickValue | undefined): number | undefined => {
-      if (value === undefined) return undefined
-      const its = itemsRef.current
-      if (its && its.length > 0) {
-        const i = its.indexOf(String(value))
-        return i >= 0 ? i : undefined
-      }
-      return typeof value === 'number' ? value : undefined
-    },
-    []
-  )
+  const valueToIndex = useCallback((value: RafflePickValue | undefined): number | undefined => {
+    if (value === undefined) return undefined
+    const its = itemsRef.current
+    if (its && its.length > 0) {
+      const i = its.indexOf(String(value))
+      return i >= 0 ? i : undefined
+    }
+    return typeof value === 'number' ? value : undefined
+  }, [])
 
-  const initialIndex = (() => {
+  const initialIndex = useMemo(() => {
     if (initialValue === undefined) return cycleMin
     if (items && items.length > 0) {
       const i = items.indexOf(String(initialValue))
       return i >= 0 ? i : cycleMin
     }
     return typeof initialValue === 'number' ? initialValue : cycleMin
-  })()
+  }, [initialValue, items, cycleMin])
 
   const [displayed, setDisplayed] = useState<RafflePickValue>(() => {
     if (initialValue !== undefined) {
@@ -106,21 +102,66 @@ export function RafflePickRoot({
     finalValueRef.current = finalValue
   }, [finalValue])
 
+  // `noRepeat` history: which indices/values have already been frozen on.
+  // Lives in a ref (mutated only inside callbacks/effects, never read during
+  // render) plus a mirrored counter in state so render can derive
+  // `exhausted` without touching the ref directly.
+  const drawnRef = useRef<Set<number>>(new Set())
+  const [drawnCount, setDrawnCount] = useState(0)
+
+  const onExhaustedRef = useRef(onExhausted)
+  useEffect(() => {
+    onExhaustedRef.current = onExhausted
+  }, [onExhausted])
+
   const onSettle = useCallback(() => {
     const forced = valueToIndex(finalValueRef.current)
     if (forced !== undefined) {
       valueRef.current = forced
     }
+    if (noRepeat) {
+      drawnRef.current.add(valueRef.current)
+      setDrawnCount(drawnRef.current.size)
+    }
     const v = displayValue(valueRef.current)
     setDisplayed(v)
     onSelect?.(v)
-  }, [displayValue, onSelect, valueToIndex])
+  }, [displayValue, onSelect, valueToIndex, noRepeat])
 
-  const { phase, step, start, freeze, reset } = useRafflePhase(
-    inertia,
-    initialPhase,
-    onSettle
-  )
+  const { phase, step, start, freeze, reset } = useRafflePhase(inertia, initialPhase, onSettle)
+
+  const exhausted = noRepeat && drawnCount >= totalCandidates
+
+  const guardedStart = useCallback(() => {
+    if (noRepeat && drawnRef.current.size >= totalCandidates) {
+      onExhaustedRef.current?.()
+      return
+    }
+    start()
+  }, [start, noRepeat, totalCandidates])
+
+  const resetHistory = useCallback(() => {
+    drawnRef.current.clear()
+    setDrawnCount(0)
+  }, [])
+
+  // Keep valueRef in sync if `initialValue` changes while idle (e.g.
+  // consumer picks a different pre-selected entry before a round starts).
+  // `displayed` itself is derived below rather than set here, to avoid a
+  // setState-in-effect render cascade.
+  useEffect(() => {
+    if (phase !== 'idle') return
+    valueRef.current = initialIndex
+  }, [phase, initialIndex])
+
+  // Mirrors displayValue(), but reads the `items` prop directly instead of
+  // itemsRef — ref reads aren't allowed during render.
+  const displayedValue =
+    phase === 'idle'
+      ? items && items.length > 0
+        ? (items[initialIndex] ?? items[cycleMin])
+        : initialIndex
+      : displayed
 
   const multiplier = getInertiaMultiplier(phase, step, inertia)
   const safeInterval = Math.max(50, interval)
@@ -134,47 +175,57 @@ export function RafflePickRoot({
     random,
     running,
     valueRef,
+    excludedRef: noRepeat ? drawnRef : undefined,
     onTick,
   })
+
+  const remaining = noRepeat ? Math.max(0, totalCandidates - drawnCount) : totalCandidates
 
   const ctxValue: RaffleContextValue = useMemo(
     () => ({
       phase,
       step,
-      displayed,
+      displayed: displayedValue,
       cycleInterval,
       inertia,
       hasItems,
       initialIndex,
       initialValue,
       finalValue,
+      noRepeat,
+      exhausted,
+      remaining,
       valueRef,
       displayValue,
       subscribe,
-      start,
+      start: guardedStart,
       freeze,
       reset,
+      resetHistory,
     }),
     [
       phase,
       step,
-      displayed,
+      displayedValue,
       cycleInterval,
       inertia,
       hasItems,
       initialIndex,
       initialValue,
       finalValue,
+      noRepeat,
+      exhausted,
+      remaining,
       displayValue,
       subscribe,
-      start,
+      guardedStart,
       freeze,
       reset,
+      resetHistory,
     ]
   )
 
-  const selectionState =
-    phase === 'idle' ? 'idle' : phase === 'frozen' ? 'frozen' : 'running'
+  const selectionState = phase === 'idle' ? 'idle' : phase === 'frozen' ? 'frozen' : 'running'
 
   return createElement(
     as as ElementType,
