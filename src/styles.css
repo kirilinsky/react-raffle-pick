@@ -27,9 +27,9 @@
   box-sizing: border-box;
   text-align: center;
 }
+/* Stop = quick decelerate-and-settle bounce, not an instant snap. */
 .rrp-slot[data-stopped] .rrp-slot__col {
-  animation: none;
-  transform: translate3d(0, -33.3333%, 0);
+  animation: rrp-slot-settle 320ms cubic-bezier(0.2, 1.4, 0.4, 1) forwards;
 }
 @keyframes rrp-slot-reel {
   from {
@@ -39,16 +39,27 @@
     transform: translate3d(0, -66.6666%, 0);
   }
 }
+@keyframes rrp-slot-settle {
+  0% {
+    transform: translate3d(0, -38%, 0);
+  }
+  60% {
+    transform: translate3d(0, -31%, 0);
+  }
+  100% {
+    transform: translate3d(0, -33.3333%, 0);
+  }
+}
 
 /* Value animations: opt-in via <RafflePick.Value animation="..." /> */
 .rrp-value {
   display: inline-block;
 }
 .rrp-value[data-animation='roll'][data-phase='running'] {
-  animation: rrp-value-roll var(--rrp-tick, 100ms) linear;
+  animation: rrp-value-roll var(--rrp-tick, 100ms) cubic-bezier(0.22, 1, 0.36, 1);
 }
 .rrp-value[data-animation='fade'][data-phase='running'] {
-  animation: rrp-value-fade var(--rrp-tick, 100ms) linear;
+  animation: rrp-value-fade var(--rrp-tick, 100ms) cubic-bezier(0.16, 1, 0.3, 1);
 }
 .rrp-value[data-animation='blur'][data-phase='running'] {
   animation: rrp-value-blur var(--rrp-tick, 100ms) linear;
@@ -56,21 +67,25 @@
 .rrp-value[data-animation='reel'][data-phase='running'] {
   animation: rrp-value-reel var(--rrp-tick, 100ms) linear;
 }
+/* Freeze = one settle pop shared by every animation type — the "winner" beat. */
+.rrp-value[data-animation][data-phase='frozen'] {
+  animation: rrp-value-settle 420ms cubic-bezier(0.2, 1.4, 0.4, 1);
+}
 @keyframes rrp-value-roll {
-  from {
+  0% {
     transform: translateY(-0.4em);
-    opacity: 0.4;
+    opacity: 0.45;
   }
-  to {
+  100% {
     transform: translateY(0);
     opacity: 1;
   }
 }
 @keyframes rrp-value-fade {
-  from {
-    opacity: 0.2;
+  0% {
+    opacity: 0.25;
   }
-  to {
+  100% {
     opacity: 1;
   }
 }
@@ -92,13 +107,28 @@
     opacity: 1;
   }
 }
+@keyframes rrp-value-settle {
+  0% {
+    transform: scale(0.84);
+    opacity: 0.7;
+  }
+  55% {
+    transform: scale(1.07);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
-/* Respect vestibular disorders — kill all motion, keep instant value swaps. */
+/* Respect vestibular disorders — kill all motion, keep instant value swaps.
+   !important: these must always win, regardless of the specificity of
+   whatever running/settle rule above (or added later) also matches. */
 @media (prefers-reduced-motion: reduce) {
   .rrp-slot__col {
-    animation: none;
+    animation: none !important;
   }
   .rrp-value[data-animation] {
-    animation: none;
+    animation: none !important;
   }
 }

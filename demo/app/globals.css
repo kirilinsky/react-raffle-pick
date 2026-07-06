@@ -115,3 +115,88 @@ body {
     animation: none;
   }
 }
+
+/* Idle "breathe" — a soft gold halo pulse inviting the pull, off once running/frozen. */
+@keyframes cabinet-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 18px 50px rgba(60, 15, 25, 0.45),
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -4px 12px rgba(0, 0, 0, 0.25),
+      0 0 0 rgba(212, 160, 74, 0);
+  }
+  50% {
+    box-shadow:
+      0 18px 50px rgba(60, 15, 25, 0.45),
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -4px 12px rgba(0, 0, 0, 0.25),
+      0 0 34px 7px rgba(212, 160, 74, 0.4);
+  }
+}
+
+.cabinet-idle-glow[data-state='idle'] {
+  animation: cabinet-glow 2600ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cabinet-idle-glow {
+    animation: none !important;
+  }
+}
+
+/* <RafflePick.Countdown> ships with zero styles by design (headless) — this
+   is the "bring your own CSS" ring the README describes. */
+.countdown-ring {
+  position: relative;
+  display: inline-flex;
+  width: 64px;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown-ring .rrp-countdown__svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.countdown-ring .rrp-countdown__track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 3;
+}
+
+.countdown-ring .rrp-countdown__bar {
+  fill: none;
+  stroke: var(--burgundy);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 100.53;
+  stroke-dashoffset: 0;
+  animation: countdown-ring-fill var(--rrp-countdown, 5s) linear forwards;
+}
+
+@keyframes countdown-ring-fill {
+  to {
+    stroke-dashoffset: 100.53;
+  }
+}
+
+.countdown-ring .rrp-countdown__label {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--burgundy);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .countdown-ring .rrp-countdown__bar {
+    animation: none;
+    stroke-dashoffset: 100.53;
+  }
+}

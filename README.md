@@ -15,11 +15,14 @@
     <a href="https://kirilinsky.github.io/react-raffle-picker/">
       <img src="https://img.shields.io/badge/storybook-live-ff4785?logo=storybook&logoColor=white" alt="Storybook" />
     </a>
-    <a href="https://codecov.io/gh/kirilinsky/react-raffle-picker">
-      <img src="https://codecov.io/gh/kirilinsky/react-raffle-picker/branch/main/graph/badge.svg" alt="Codecov coverage" />
+    <a href="https://app.codecov.io/gh/kirilinsky/react-raffle-picker">
+      <img src="https://img.shields.io/codecov/c/github/kirilinsky/react-raffle-picker?label=coverage" alt="Codecov coverage" />
     </a>
-    <a href="https://bundlephobia.com/package/react-raffle-picker">
-      <img src="https://img.shields.io/bundlephobia/minzip/react-raffle-picker?label=gzip" alt="Gzip bundle size" />
+    <a href="https://www.npmjs.com/package/react-raffle-picker">
+      <img src="https://img.shields.io/npm/v/react-raffle-picker" alt="npm version" />
+    </a>
+    <a href="https://www.npmjs.com/package/react-raffle-picker">
+      <img src="https://img.shields.io/npm/dm/react-raffle-picker" alt="npm downloads" />
     </a>
   </p>
 </div>
