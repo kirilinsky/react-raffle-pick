@@ -135,6 +135,7 @@ Toggles start / freeze based on phase. Disabled during settling.
 | `stopLabel`  | `ReactNode`     | Shown in `running` / `starting` (click stops).   |
 | `waitLabel`  | `ReactNode`     | Shown in `settling` (button disabled).           |
 | `children`   | `ReactNode`     | Fallback label when state-specific label absent. |
+| `disabled`   | `boolean`       | External disable, on top of the auto-disable during `settling`. |
 | `className`  | `string`        | —                                                |
 | `style`      | `CSSProperties` | —                                                |
 
@@ -223,6 +224,18 @@ Independent multi-reel slot machine. Each reel ticks on its own and stops with a
 - **`glitch` animation** — offset color-channel pulse for a digital noise feel during running.
 - Headless `useRafflePick()` hook for users who want zero rendering from the lib.
 - Render-prop variant of `<Value>` for fully custom DOM.
+
+## Accessibility
+
+- `<RafflePick.Value>` cycles are visual-only (`aria-hidden`) — high-frequency tick
+  updates are not announced. The frozen result *is* announced once per round via a
+  hidden `aria-live="polite"` region.
+- `<RafflePick.Countdown>`'s ring/label are `aria-hidden`; a one-time sr-only
+  announcement fires when the countdown starts. The result itself is still
+  announced by `<RafflePick.Value>` on freeze.
+- `styles.css` respects `prefers-reduced-motion: reduce` — value animations and the
+  slot reel disable their `animation` under that media query. If you ship fully
+  custom CSS instead of the bundled stylesheet, add the same guard yourself.
 
 ## Performance notes
 

@@ -7,6 +7,7 @@ export {
   useRaffleContext,
   RaffleContext,
 } from './components/RafflePick'
+export type { RaffleContextValue, RafflePickPhase } from './components/RafflePick'
 export type {
   AnimationType,
   RafflePickValue as RafflePickValueType,

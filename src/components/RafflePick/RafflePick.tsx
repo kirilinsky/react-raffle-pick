@@ -35,11 +35,7 @@ export function RafflePickRoot({
   const cycleMin = hasItems ? 0 : min
   const cycleMax = hasItems ? itemCount - 1 : max
 
-  const initialPhase: RafflePickPhase = autoStart
-    ? inertia
-      ? 'starting'
-      : 'running'
-    : 'idle'
+  const initialPhase: RafflePickPhase = autoStart ? (inertia ? 'starting' : 'running') : 'idle'
 
   const itemsRef = useRef(items)
   useEffect(() => {
@@ -51,27 +47,24 @@ export function RafflePickRoot({
     return its && its.length > 0 ? its[index] : index
   }, [])
 
-  const valueToIndex = useCallback(
-    (value: RafflePickValue | undefined): number | undefined => {
-      if (value === undefined) return undefined
-      const its = itemsRef.current
-      if (its && its.length > 0) {
-        const i = its.indexOf(String(value))
-        return i >= 0 ? i : undefined
-      }
-      return typeof value === 'number' ? value : undefined
-    },
-    []
-  )
+  const valueToIndex = useCallback((value: RafflePickValue | undefined): number | undefined => {
+    if (value === undefined) return undefined
+    const its = itemsRef.current
+    if (its && its.length > 0) {
+      const i = its.indexOf(String(value))
+      return i >= 0 ? i : undefined
+    }
+    return typeof value === 'number' ? value : undefined
+  }, [])
 
-  const initialIndex = (() => {
+  const initialIndex = useMemo(() => {
     if (initialValue === undefined) return cycleMin
     if (items && items.length > 0) {
       const i = items.indexOf(String(initialValue))
       return i >= 0 ? i : cycleMin
     }
     return typeof initialValue === 'number' ? initialValue : cycleMin
-  })()
+  }, [initialValue, items, cycleMin])
 
   const [displayed, setDisplayed] = useState<RafflePickValue>(() => {
     if (initialValue !== undefined) {
@@ -116,11 +109,25 @@ export function RafflePickRoot({
     onSelect?.(v)
   }, [displayValue, onSelect, valueToIndex])
 
-  const { phase, step, start, freeze, reset } = useRafflePhase(
-    inertia,
-    initialPhase,
-    onSettle
-  )
+  const { phase, step, start, freeze, reset } = useRafflePhase(inertia, initialPhase, onSettle)
+
+  // Keep valueRef in sync if `initialValue` changes while idle (e.g.
+  // consumer picks a different pre-selected entry before a round starts).
+  // `displayed` itself is derived below rather than set here, to avoid a
+  // setState-in-effect render cascade.
+  useEffect(() => {
+    if (phase !== 'idle') return
+    valueRef.current = initialIndex
+  }, [phase, initialIndex])
+
+  // Mirrors displayValue(), but reads the `items` prop directly instead of
+  // itemsRef — ref reads aren't allowed during render.
+  const displayedValue =
+    phase === 'idle'
+      ? items && items.length > 0
+        ? (items[initialIndex] ?? items[cycleMin])
+        : initialIndex
+      : displayed
 
   const multiplier = getInertiaMultiplier(phase, step, inertia)
   const safeInterval = Math.max(50, interval)
@@ -141,7 +148,7 @@ export function RafflePickRoot({
     () => ({
       phase,
       step,
-      displayed,
+      displayed: displayedValue,
       cycleInterval,
       inertia,
       hasItems,
@@ -158,7 +165,7 @@ export function RafflePickRoot({
     [
       phase,
       step,
-      displayed,
+      displayedValue,
       cycleInterval,
       inertia,
       hasItems,
@@ -173,8 +180,7 @@ export function RafflePickRoot({
     ]
   )
 
-  const selectionState =
-    phase === 'idle' ? 'idle' : phase === 'frozen' ? 'frozen' : 'running'
+  const selectionState = phase === 'idle' ? 'idle' : phase === 'frozen' ? 'frozen' : 'running'
 
   return createElement(
     as as ElementType,

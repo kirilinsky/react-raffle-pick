@@ -32,8 +32,12 @@
   transform: translate3d(0, -33.3333%, 0);
 }
 @keyframes rrp-slot-reel {
-  from { transform: translate3d(0, -33.3333%, 0); }
-  to   { transform: translate3d(0, -66.6666%, 0); }
+  from {
+    transform: translate3d(0, -33.3333%, 0);
+  }
+  to {
+    transform: translate3d(0, -66.6666%, 0);
+  }
 }
 
 /* Value animations: opt-in via <RafflePick.Value animation="..." /> */
@@ -53,18 +57,48 @@
   animation: rrp-value-reel var(--rrp-tick, 100ms) linear;
 }
 @keyframes rrp-value-roll {
-  from { transform: translateY(-0.4em); opacity: 0.4; }
-  to   { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-0.4em);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 @keyframes rrp-value-fade {
-  from { opacity: 0.2; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes rrp-value-blur {
-  from { filter: blur(4px); }
-  to   { filter: blur(0); }
+  from {
+    filter: blur(4px);
+  }
+  to {
+    filter: blur(0);
+  }
 }
 @keyframes rrp-value-reel {
-  from { transform: translateY(-1em); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-1em);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Respect vestibular disorders — kill all motion, keep instant value swaps. */
+@media (prefers-reduced-motion: reduce) {
+  .rrp-slot__col {
+    animation: none;
+  }
+  .rrp-value[data-animation] {
+    animation: none;
+  }
 }

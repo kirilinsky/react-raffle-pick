@@ -4,21 +4,38 @@ export type AnimationType = 'roll' | 'fade' | 'blur' | 'reel'
 export type RafflePickValue = number | string
 
 export interface RafflePickRootProps {
+  /**
+   * Item pool to cycle through (names, tickets, anything). Switches the
+   * component to "items mode" — `min`/`max` are ignored. An empty array
+   * (`[]`, as opposed to `undefined`) is treated as "no items" and falls
+   * back to the numeric `min`/`max` range.
+   */
   items?: string[]
+  /** Range start in numeric mode. Ignored when `items` is set. */
   min?: number
+  /** Range end in numeric mode. Ignored when `items` is set. */
   max?: number
+  /** Tick speed in ms. Clamped to a minimum of 50. */
   interval?: number
+  /** Pick the next tick value at random instead of incrementing sequentially. */
   random?: boolean
+  /** Soft-start / soft-stop ramp (`starting`/`settling` phases) instead of an instant flip. */
   inertia?: boolean
+  /** Begin cycling on mount. Set `false` to wait for `<RafflePick.Button>`/`start()`. */
   autoStart?: boolean
   /** Value shown before first run. Number in min/max mode, string in items mode. */
   initialValue?: RafflePickValue
   /** When set, settle always lands on this value while cycle still appears random. */
   finalValue?: RafflePickValue
+  /** Fires once per round, when the phase settles to `frozen`. */
   onSelect?: (value: RafflePickValue) => void
+  /** Wrapper element/component. Default `'div'`. */
   as?: ElementType
+  /** Wrapper class. */
   className?: string
+  /** Wrapper inline style. */
   style?: CSSProperties
+  /** Compound sub-components: `<RafflePick.Value>`, `.Button`, `.Countdown`, `.Slots`. */
   children?: ReactNode
 }
 
@@ -40,6 +57,8 @@ export interface RafflePickButtonProps {
   stopLabel?: ReactNode
   /** Label while settling (button disabled). */
   waitLabel?: ReactNode
+  /** External disable (e.g. form not valid). Always disabled while settling regardless. */
+  disabled?: boolean
 }
 
 export interface RafflePickSlotsProps {
