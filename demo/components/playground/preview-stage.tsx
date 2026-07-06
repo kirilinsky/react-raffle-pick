@@ -21,10 +21,19 @@ export function PreviewStage({ state }: { state: PlaygroundState }) {
       ? { min: range.min, max: range.max }
       : { items: safeItems }
 
+  // Only remount when the value domain (mode/range/items) or autoStart
+  // (mount-only config) changes. interval/inertia/animation/countdown are
+  // reactive props on the library side — keying on the full state here would
+  // remount on every slider-drag tick and freeze the display mid-drag.
+  const domainKey =
+    state.mode === 'range'
+      ? `range:${range.min}-${range.max}:${state.autoStart}`
+      : `items:${safeItems.join('|')}:${state.autoStart}`
+
   return (
     <div className="flex min-h-[480px] flex-col items-center justify-center gap-6 rounded-3 border border-line bg-bg-card bg-[radial-gradient(circle_at_50%_30%,rgba(212,160,74,0.06),transparent_60%)] p-10">
       <RafflePick
-        key={JSON.stringify(state)}
+        key={domainKey}
         {...modeProps}
         interval={state.interval}
         inertia={state.inertia}

@@ -68,7 +68,7 @@ export function FeaturesGrid() {
           >
             <header className="flex items-start justify-between gap-2">
               <h3 className="font-display text-xl leading-tight">{f.title}</h3>
-              <span className="rounded-full border border-gold/30 bg-gold/15 px-2.5 py-1 font-mono text-xs text-gold-deep">
+              <span className="shrink-0 whitespace-nowrap rounded-full border border-gold/30 bg-gold/15 px-2.5 py-1 font-mono text-xs text-gold-deep">
                 {f.pill}
               </span>
             </header>

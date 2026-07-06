@@ -73,26 +73,20 @@
 }
 @keyframes rrp-value-roll {
   0% {
-    transform: translateY(-0.55em) scale(1.04);
-    opacity: 0.35;
-  }
-  70% {
-    transform: translateY(0.03em) scale(1);
-    opacity: 1;
+    transform: translateY(-0.4em);
+    opacity: 0.45;
   }
   100% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     opacity: 1;
   }
 }
 @keyframes rrp-value-fade {
   0% {
-    opacity: 0.15;
-    transform: scale(0.92);
+    opacity: 0.25;
   }
   100% {
     opacity: 1;
-    transform: scale(1);
   }
 }
 @keyframes rrp-value-blur {
