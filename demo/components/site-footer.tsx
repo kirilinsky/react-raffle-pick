@@ -13,8 +13,8 @@ const PACKAGE_LINKS = [
     href: 'https://kirilinsky.github.io/react-raffle-picker/',
   },
   {
-    label: 'Bundlephobia',
-    href: 'https://bundlephobia.com/package/react-raffle-picker',
+    label: 'Changelog',
+    href: 'https://github.com/kirilinsky/react-raffle-picker/blob/main/CHANGELOG.md',
   },
 ]
 

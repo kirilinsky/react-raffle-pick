@@ -9,11 +9,15 @@ const SLOT_BASE_CSS = `
 .rrp-slot{display:inline-block;position:relative;overflow:hidden;vertical-align:baseline}
 .rrp-slot__col{position:absolute;top:0;left:0;right:0;height:300%;transform:translate3d(0,-33.3333%,0);animation:rrp-slot-reel var(--rrp-tick,80ms) linear infinite;will-change:transform}
 .rrp-slot__cell{height:33.3333%;display:grid;place-items:center;padding:0;margin:0;box-sizing:border-box;text-align:center}
-.rrp-slot[data-stopped] .rrp-slot__col{animation:none;transform:translate3d(0,-33.3333%,0)}
+.rrp-slot[data-stopped] .rrp-slot__col{animation:rrp-slot-settle 320ms cubic-bezier(0.2,1.4,0.4,1) forwards}
 @keyframes rrp-slot-reel{from{transform:translate3d(0,-33.3333%,0)}to{transform:translate3d(0,-66.6666%,0)}}
+@keyframes rrp-slot-settle{0%{transform:translate3d(0,-38%,0)}60%{transform:translate3d(0,-31%,0)}100%{transform:translate3d(0,-33.3333%,0)}}
+@media (prefers-reduced-motion: reduce) {
+  .rrp-slot__col { animation: none !important; }
+}
 `
 
-const SLOT_STYLES_VERSION = '4'
+const SLOT_STYLES_VERSION = '5'
 const injectSlotStyles = () => {
   if (typeof document === 'undefined') return
   const existing = document.querySelector('style[data-rrp-slot-base]') as HTMLStyleElement | null
