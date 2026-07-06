@@ -1,5 +1,41 @@
 # react-raffle-picker
 
+## 0.3.1
+
+### Patch Changes
+
+- 3ed1ad7: ### Fix: `roll`/`fade` per-tick jitter at large font sizes
+
+  The previous pass on these animations added a `scale()` + overshoot keyframe on
+  top of the opacity dip. At small sizes (hero-scale text) it read as a nice
+  snap; at large display sizes (e.g. a `clamp(80px,16vw,160px)` value in a
+  playground/demo) the combined scale + vertical offset, replaying every tick,
+  made the text visibly wobble/jitter instead of read as a clean spin.
+
+  Dropped the `scale()` and overshoot stop from both keyframes, keeping the
+  eased timing-function but reverting to a simpler translateY/opacity motion —
+  same idea as before this pass, no wobble at any font size.
+
+- 5e1ac40: ### Livelier default animations, freeze "settle" pop, slot reel bounce-stop
+
+  `styles.css` (and the auto-injected `<RafflePick.Slots>` stylesheet) got a
+  visual pass:
+  - `roll` and `fade` (`<RafflePick.Value animation="...">`) now use eased,
+    multi-stage keyframes instead of flat `linear` — noticeably snappier per
+    tick.
+  - New: every animation type gets a shared "settle" pop on freeze
+    (`[data-phase='frozen']`) — previously freezing had zero animation at all,
+    the value just stopped in place.
+  - `<RafflePick.Slots>` reels now decelerate into a small overshoot bounce on
+    stop instead of snapping instantly to rest.
+  - Fixed: the `prefers-reduced-motion` override didn't have enough CSS
+    specificity to beat the (new) settle/stop animations — it's `!important`
+    now, so it reliably wins regardless of what other animation rules exist.
+  - Fixed: the auto-injected runtime stylesheet for `<RafflePick.Slots>` had no
+    `prefers-reduced-motion` guard at all (only the statically-imported
+    `styles.css` did) — consumers relying on the auto-injected CSS got no
+    reduced-motion protection for the slot reel.
+
 ## 0.3.0
 
 ### Minor Changes
