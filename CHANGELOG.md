@@ -1,5 +1,11 @@
 # react-raffle-picker
 
+## 0.3.2
+
+### Patch Changes
+
+- 34f9f6d: Rewrite the npm description and keywords.
+
 ## 0.3.1
 
 ### Patch Changes
