@@ -8,7 +8,7 @@ export function HeroText() {
       <HeroPill>npm i react-raffle-picker</HeroPill>
 
       <h1 className="mt-5 text-balance font-display text-[clamp(44px,8vw,96px)] leading-[0.95] tracking-[-0.025em]">
-        React like you just won.
+        Random winner picker for React.
       </h1>
 
       <div className="my-12 inline-block pr-10 max-[600px]:pr-7">
@@ -16,7 +16,13 @@ export function HeroText() {
       </div>
 
       <p className="my-2 text-balance font-display text-[clamp(22px,3.2vw,38px)] italic tracking-[-0.01em] text-burgundy">
-        The raffle picker your UI deserves.
+        React like you just won.
+      </p>
+
+      <p className="mt-5 max-w-[640px] text-balance text-ink-2 text-[clamp(15px,1.5vw,18px)] leading-relaxed">
+        A headless React component for giveaways, raffles and prize draws. Cycle a list of names or
+        a number range, freeze on a winner, and never draw the same one twice — with slot-machine
+        reels, four animations and countdown auto-freeze.
       </p>
 
       <div className="mt-4 flex flex-wrap justify-center gap-3.5">

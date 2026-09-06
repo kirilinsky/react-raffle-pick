@@ -12,6 +12,8 @@ import {
   VALUE_PROPS,
 } from '@/components/api-page/data'
 import { PropsTable } from '@/components/api-page/props-table'
+import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/site'
 
 const QUICKSTART = `import { RafflePick } from 'react-raffle-picker'
 
@@ -31,6 +33,13 @@ const TOC = [
   { href: '#types', label: 'Types' },
 ]
 
+export const metadata: Metadata = pageMetadata({
+  title: 'API reference — every prop on one page',
+  description:
+    'Full react-raffle-picker API: RafflePick root props, Value, Button, Countdown and Slots sub-components, the useRaffleContext hook and exported types.',
+  path: '/api',
+})
+
 export default function ApiPage() {
   return (
     <section className="py-16">
@@ -41,8 +50,8 @@ export default function ApiPage() {
             Every prop, one page.
           </h1>
           <p className="text-balance text-ink-2 text-[clamp(16px,1.6vw,19px)] leading-relaxed">
-            This is the flat reference — everything the compound API exposes, no clicking
-            through tabs. For a live, interactive version of every prop, use the{' '}
+            This is the flat reference — everything the compound API exposes, no clicking through
+            tabs. For a live, interactive version of every prop, use the{' '}
             <a
               href="https://kirilinsky.github.io/react-raffle-picker/"
               target="_blank"
@@ -51,7 +60,14 @@ export default function ApiPage() {
             >
               Storybook
             </a>{' '}
-            or the <Link href="/playground" className="text-burgundy underline underline-offset-2 hover:no-underline">Playground</Link>.
+            or the{' '}
+            <Link
+              href="/playground"
+              className="text-burgundy underline underline-offset-2 hover:no-underline"
+            >
+              Playground
+            </Link>
+            .
           </p>
         </header>
 
@@ -73,16 +89,16 @@ export default function ApiPage() {
 
         <ApiSection id="root" title="<RafflePick>" kicker="root">
           <p className="text-sm leading-relaxed text-ink-2">
-            Owns the engine — cycling, phase machine, no-repeat history. Provides context;
-            renders no DOM opinion beyond the wrapper element.
+            Owns the engine — cycling, phase machine, no-repeat history. Provides context; renders
+            no DOM opinion beyond the wrapper element.
           </p>
           <PropsTable rows={ROOT_PROPS} />
         </ApiSection>
 
         <ApiSection id="value" title="<RafflePick.Value>" kicker="consumer">
           <p className="text-sm leading-relaxed text-ink-2">
-            Renders the cycling value. Writes textContent imperatively per tick — no React
-            re-render while running. Multiple instances inside one root are supported.
+            Renders the cycling value. Writes textContent imperatively per tick — no React re-render
+            while running. Multiple instances inside one root are supported.
           </p>
           <PropsTable rows={VALUE_PROPS} />
         </ApiSection>
@@ -96,7 +112,8 @@ export default function ApiPage() {
 
         <ApiSection id="countdown" title="<RafflePick.Countdown>" kicker="consumer">
           <p className="text-sm leading-relaxed text-ink-2">
-            Schedules auto-freeze after <code className="rounded bg-bg-2 px-1 py-0.5 font-mono text-[0.9em]">seconds</code>.
+            Schedules auto-freeze after{' '}
+            <code className="rounded bg-bg-2 px-1 py-0.5 font-mono text-[0.9em]">seconds</code>.
             Renders an SVG ring + numeric label by default.
           </p>
           <PropsTable rows={COUNTDOWN_PROPS} />
@@ -112,7 +129,10 @@ export default function ApiPage() {
 
         <ApiSection id="context" title="useRaffleContext()" kicker="escape hatch">
           <p className="text-sm leading-relaxed text-ink-2">
-            For fully custom renderers. Must be called under <code className="rounded bg-bg-2 px-1 py-0.5 font-mono text-[0.9em]">{'<RafflePick>'}</code>{' '}
+            For fully custom renderers. Must be called under{' '}
+            <code className="rounded bg-bg-2 px-1 py-0.5 font-mono text-[0.9em]">
+              {'<RafflePick>'}
+            </code>{' '}
             — throws otherwise.
           </p>
           <PropsTable rows={CONTEXT_FIELDS} />

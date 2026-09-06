@@ -3,7 +3,7 @@
 
   <h1>react-raffle-picker</h1>
 
-  <p><strong>React like you just won. The raffle picker your UI deserves.</strong></p>
+  <p><strong>Random winner picker for React.</strong><br/>Giveaways, raffles, prize draws and slot-machine UIs — headless, typed, zero dependencies.</p>
 
   <p>
     <a href="https://react-raffle-one.vercel.app/">Live demo</a>
@@ -27,7 +27,16 @@
   </p>
 </div>
 
-A headless, composable React component for giveaways, raffles, and slot-machine UIs. Cycles numbers or names with smooth animations and freezes on a winner. Performant on slow devices — high-frequency tick updates bypass React.
+Pick a random winner in React. `react-raffle-picker` cycles a list of names or a number range,
+freezes on a winner, and never draws the same one twice — with slot-machine reels, four CSS
+animations and countdown auto-freeze.
+
+It ships as a **headless compound component**: no layout opinions, no style props soup, you
+bring your own CSS. Performant on slow devices — high-frequency tick updates bypass React and
+write to the DOM via refs.
+
+**Use it for:** giveaway winners on stream · prize draws · random name picker · standup speaking
+order · random number roller · slot-machine and lottery UIs.
 
 ```bash
 npm install react-raffle-picker
@@ -71,7 +80,6 @@ This means:
 
 ```tsx
 import { RafflePick } from 'react-raffle-picker'
-
 ;<RafflePick min={1} max={100} interval={100} inertia onSelect={(v) => console.log(v)}>
   <RafflePick.Value animation="roll" className="my-value" />
   <RafflePick.Button startLabel="Pick" stopLabel="Stop" />
@@ -107,11 +115,11 @@ Provides context. Renders an optional wrapper element (`as` prop, default `'div'
 | `random`       | `boolean`                   | `true`     | Random pick vs sequential.                                                                                                                                               |
 | `inertia`      | `boolean`                   | `false`    | Soft start / soft stop ramp.                                                                                                                                             |
 | `autoStart`    | `boolean`                   | `true`     | Begin cycling on mount.                                                                                                                                                  |
-| `noRepeat`     | `boolean`                   | `true`     | Exclude previously frozen values from later rounds — no duplicate winners across sequential draws in the same mounted instance. Set `false` to allow repeats.           |
+| `noRepeat`     | `boolean`                   | `true`     | Exclude previously frozen values from later rounds — no duplicate winners across sequential draws in the same mounted instance. Set `false` to allow repeats.            |
 | `initialValue` | `number \| string`          | —          | Starting display before first run. Number for `min`/`max` mode, string for `items` mode. For `<Slots>`, each character seeds the corresponding reel.                     |
 | `finalValue`   | `number \| string`          | —          | Forces settle to land on this value. Cycle still appears random; only final freeze is rigged. For `<Slots>`, each character is the final char of the corresponding reel. |
 | `onSelect`     | `(value) => void`           | —          | Fires once per round on freeze.                                                                                                                                          |
-| `onExhausted`  | `() => void`                | —          | Fires when `start()` is called but `noRepeat` has already drawn every candidate.                                                                                        |
+| `onExhausted`  | `() => void`                | —          | Fires when `start()` is called but `noRepeat` has already drawn every candidate.                                                                                         |
 | `as`           | `ElementType`               | `'div'`    | Wrapper tag.                                                                                                                                                             |
 | `className`    | `string`                    | —          | Wrapper class.                                                                                                                                                           |
 | `style`        | `CSSProperties`             | —          | Wrapper style.                                                                                                                                                           |
@@ -136,15 +144,15 @@ Multiple `Value` instances inside one root are supported — all subscribe to th
 
 Toggles start / freeze based on phase. Disabled during settling.
 
-| Prop         | Type            | Notes                                            |
-| ------------ | --------------- | ------------------------------------------------ |
-| `startLabel` | `ReactNode`     | Shown in `idle` / `frozen` (click starts).       |
-| `stopLabel`  | `ReactNode`     | Shown in `running` / `starting` (click stops).   |
-| `waitLabel`  | `ReactNode`     | Shown in `settling` (button disabled).           |
-| `children`   | `ReactNode`     | Fallback label when state-specific label absent. |
+| Prop         | Type            | Notes                                                           |
+| ------------ | --------------- | --------------------------------------------------------------- |
+| `startLabel` | `ReactNode`     | Shown in `idle` / `frozen` (click starts).                      |
+| `stopLabel`  | `ReactNode`     | Shown in `running` / `starting` (click stops).                  |
+| `waitLabel`  | `ReactNode`     | Shown in `settling` (button disabled).                          |
+| `children`   | `ReactNode`     | Fallback label when state-specific label absent.                |
 | `disabled`   | `boolean`       | External disable, on top of the auto-disable during `settling`. |
-| `className`  | `string`        | —                                                |
-| `style`      | `CSSProperties` | —                                                |
+| `className`  | `string`        | —                                                               |
+| `style`      | `CSSProperties` | —                                                               |
 
 ### `<RafflePick.Countdown>`
 
@@ -260,7 +268,7 @@ function Giveaway() {
 ## Accessibility
 
 - `<RafflePick.Value>` cycles are visual-only (`aria-hidden`) — high-frequency tick
-  updates are not announced. The frozen result *is* announced once per round via a
+  updates are not announced. The frozen result _is_ announced once per round via a
   hidden `aria-live="polite"` region.
 - `<RafflePick.Countdown>`'s ring/label are `aria-hidden`; a one-time sr-only
   announcement fires when the countdown starts. The result itself is still

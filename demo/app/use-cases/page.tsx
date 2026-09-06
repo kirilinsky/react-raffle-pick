@@ -4,6 +4,15 @@ import { NumberRoller } from '@/components/use-cases/number-roller'
 import { SpeakerOrder } from '@/components/use-cases/speaker-order'
 import { UseCaseCard } from '@/components/use-cases/use-case-card'
 import { WinnerPicker } from '@/components/use-cases/winner-picker'
+import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/site'
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Use cases — giveaway, standup order, random number',
+  description:
+    'Ready-made React random picker recipes: giveaway winner from a pasted name list, speaking order for standups, random number rolls — no repeat winners.',
+  path: '/use-cases',
+})
 
 export default function UseCasesPage() {
   return (
@@ -15,8 +24,8 @@ export default function UseCasesPage() {
             Ready-made, not roll-your-own.
           </h1>
           <p className="text-balance text-ink-2 text-[clamp(16px,1.6vw,19px)] leading-relaxed">
-            Paste names, hit a button. Built for the moment you actually need this —
-            mid-stream, mid-call, no setup.
+            Paste names, hit a button. Built for the moment you actually need this — mid-stream,
+            mid-call, no setup.
           </p>
         </header>
 
